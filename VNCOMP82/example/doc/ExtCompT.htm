@@ -1,0 +1,3334 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1251">
+	<TITLE>Технология внешних компонент</TITLE>
+	<STYLE TYPE="text/css">
+	</STYLE>
+</HEAD>
+<BODY LANG="ru-RU" TEXT="#000000" LINK="#0000ff" VLINK="#0000ff" DIR="LTR">
+<P><B><FONT SIZE=5>Технология внешних компонент</FONT> </B>
+</P>
+<P>Содержание 
+</P>
+<P><FONT FACE="Arial"><FONT SIZE=4><A HREF="#_Input">Введение</A> </FONT></FONT>
+</P>
+<P><FONT FACE="Arial"><FONT SIZE=4><A HREF="#_Struct_folder">Структура
+каталогов</A> </FONT></FONT>
+</P>
+<P><FONT FACE="Arial"><FONT SIZE=4><A HREF="#_Comp_cpp">Создание
+компонент, с использованием технологии Native API</A> </FONT></FONT>
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><A HREF="#_cpp_intf_comp">Интерфейс
+	компоненты</A> 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<A HREF="#_cpp_intf_enterprise">Интерфейс 1С:Предприятия</A> 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<A HREF="#_tVariant_Enterprise">Соответствие типов tVariant и
+	1С:Предприятия</A> 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<A HREF="#_cpp_warning">Особенности разработки компонент с
+	использованием Native API</A> 
+	</DD></DL>
+<P>
+<FONT FACE="Arial"><FONT SIZE=4><A HREF="#_com_comp">Создание
+компонент, с использованием технологии COM</A> </FONT></FONT>
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><A HREF="#_com_init">Инициализация
+	и выгрузка компоненты</A> 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<A HREF="#_com_extLang">Расширение встроенного языка</A> 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<A HREF="#_com_locale">Локализация</A> 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<A HREF="#_COM_VARIANT_Exchange">Использование типа COM VARIANT при
+	обмене данными</A> 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<A HREF="#_com_call_1C">Вызов метода объекта 1С:Предприятия из
+	компоненты</A> 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<A HREF="#_COM_intf_1C">COM-интерфейсы 1C:Предприятия</A> 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<A HREF="#_com_infomessage">Информационные сообщения о работе
+	объекта</A> 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<A HREF="#_com_externalevent">Внешние события</A> 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<A HREF="#_com_statusline">Работа со строкой состояния</A> 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<A HREF="#_com_warning">Особенности разработки компонент с
+	использованием COM</A></DD></DL>
+<P>
+<A HREF="#_Подготовка_внешних_компонент_к_рабо"><FONT FACE="Arial"><FONT SIZE=4>Подготовка
+внешних компонент к работе с Веб-клиентом.</FONT></FONT></A></P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><A HREF="#_Внешние_компоненты_для_Firefox.">Внешние
+	компоненты для Firefox.</A></DD><DD STYLE="margin-bottom: 0.5cm">
+	<A HREF="#_Внешние_компоненты_для_Internet_Exp">Внешние компоненты
+	для Internet Explorer.</A></DD></DL>
+<P>
+<A HREF="#_Подготовка_внешних_компонент_для_за"><FONT FACE="Arial"><FONT SIZE=4>Подготовка
+внешних компонент для загрузки в конфигурацию.</FONT></FONT></A></P>
+<P><A HREF="#_example"><FONT FACE="Arial"><FONT SIZE=4>Описание
+примеров.</FONT></FONT></A></P>
+<H1><A NAME="_Input"></A><FONT SIZE=3>Введение</FONT> 
+</H1>
+<P>Система программ 1С:Предприятие предназначена для решения самых
+разнообразных задач автоматизации деятельности организаций. Она
+обладает мощными средствами конфигурирования, которые позволяют
+штатными средствами настроить систему на особенности обработки
+информации в конкретной организации. В тоже время, 1С:Предприятие
+является открытой системой. Для связи с другими программами могут
+использоваться встроенные средства загрузки-выгрузки информации в
+текстовом формате, в формате XML, система поддерживает стандарт
+интеграции программ OLE Automation, предоставляет доступ через
+<SPAN LANG="en-US">web</SPAN>-сервисы. Однако для специальных задач
+интеграции может потребоваться более тесное взаимодействие между
+1С:Предприятием и другими программами. 
+</P>
+<P>Для решения таких задач разработана &ldquo;Технология&nbsp;внешних
+компонент&rdquo;. Данная технология позволяет создавать программы,
+которые будут динамически подключаться и тесно взаимодействовать с
+системой 1С:Предприятие, расширяя ее возможности. Внешние компоненты
+позволяют решать широкий спектр специальных задач, в частности,
+задачи, связанные с использованием различного торгового оборудования
+совместно с 1С:Предприятием. Внешние компоненты могут быть подключены
+как к серверу приложения 1С:Предприятия, так и клиентским
+приложениям, в т.ч. и Веб-клиенту.</P>
+<P>В комплект поставки входит данное руководство и набор примеров
+реализации внешних компонент с помощью различных технологий. 
+</P>
+<P>В данном руководстве описана технология создания внешних компонент
+с использованием Native API и COM. 
+</P>
+<H1><A NAME="_Struct_folder"></A><FONT SIZE=3>Структура каталогов</FONT>
+</H1>
+<P>Каталог include содержит набор включаемых заголовочных файлов для
+создания внешних компонент. 
+</P>
+<P>Каталог lib содержит статические библиотеки для построения
+расширений для браузеров Firefox и Internet Explorer.</P>
+<P>Каталог example содержит примеры внешних компонент, разработанных
+с использованием COM и Native API. В этом же каталоге находятся
+примеры расширений для браузеров.</P>
+<P>Каталог template содержит шаблон для создания компоненты,
+разработанной по технологии Native API. 
+</P>
+<H1><A NAME="_Comp_cpp"></A><FONT SIZE=3>Создание компонент, </FONT><FONT SIZE=3><SPAN LANG="en-US">c</SPAN></FONT>
+<FONT SIZE=3>использованием технологии Native API</FONT> 
+</H1>
+<P>Эта технология позволяет создавать внешние компоненты, которые
+могут подключаться как в клиентском приложении, так и на сервере
+приложений 1С:Предприятие, в том числе и в версии для <SPAN LANG="en-US">Linux</SPAN>.</P>
+<P>Каждый объект компоненты должен наследоваться от абстрактного
+класса IComponentBase (файл ComponentBase.h входит в комплект
+поставки) и реализовать все его методы. 
+</P>
+<P>Внешняя компонента, разработанная по этой технологии, должна
+экспортировать из библиотеки три функции: 
+</P>
+<P><SPAN LANG="en-US"><B>GetClassNames</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">const WCHAR_T*
+	GetClassNames() 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">const <SPAN LANG="en-US">WCHAR</SPAN>_<SPAN LANG="en-US">T</SPAN>
+	* 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Получения списка имен объектов
+	компоненты. 
+	</DD></DL>
+<P>
+<SPAN LANG="en-US"><B>GetClassObject</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">long
+	GetClassObject(const WCHAR_T * clsName, IComponentBase** pIntf) 
+	</DD></DL>
+<P>
+Параметры<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">&lt;clsName&gt;
+	</SPAN>Тип<SPAN LANG="en-US">: const WCHAR_T *. </SPAN>Имя
+	создаваемого объекта. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt; pIntf &gt; Тип: IComponentBase**. Указатель на переменную, в
+	которую нужно записать адрес вновь созданного объекта. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">long &ndash; не нулевое значение
+	сигнализирует о успешном создании объекта 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Создание экземпляра объекта
+	компоненты. Если объект не может быть создан или не найден объект с
+	указанным именем &ndash; возвращается 0. 
+	</DD></DL>
+<P>
+<SPAN LANG="en-US"><B>DestroyObject</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">long
+	DestroyObject(IComponentBase** pIntf) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;Interface&gt; Тип:
+	IComponentBase**. Указатель на объект компонеты. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">long &ndash; успешность выполнения 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Удаление экземпляра ранее
+	созданного объекта. Компонента должна своими средствами удалить
+	объект и освободить используемую им память. При успешном завершении
+	возвращается 0, иначе &ndash; код ошибки (Runtime error). 
+	</DD></DL>
+<H3 CLASS="western">
+<A NAME="_cpp_intf_comp"></A>Интерфейс компоненты 
+</H3>
+<P><SPAN LANG="en-US"><B>Init</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">bool Init(void*
+	Interface) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;Interface&gt; Тип: void*.
+	Указатель на интерфейс 1С:Предприятия. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">bool &ndash; успешность выполнения 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">При загрузке 1С:Предприятие
+	инициализирует объект компоненты, вызывая метод Init и передавая
+	указатель на IAddInDefBase. Объект может сохранить этот указатель
+	для дальнейшего использования. Объект должен возвратить true, если
+	инициализация прошла успешно, и false при возникновении ошибки. 
+	</DD></DL>
+<P>
+<SPAN LANG="en-US"><B>setMemManager</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">bool
+	setMemManager(void* memManager) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;mem&gt; Тип: void*. Указатель
+	на интерфейс менеджера памяти 1С:Предприятия. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">bool &ndash; успешность выполнения 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Установка менеджера памяти для
+	компоненты. При передаче возвращаемых значений, которые не могут
+	быть переданы полностью через стек, компонента должна выделять
+	память с помощью функции AllocMemory, предоставляемую менеджером
+	памяти. 1С:Предприятие впоследствии освободит эту память с помощью
+	функции FreeMemory. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<B>ВАЖНО</B>: нельзя выделять память для возврата значений с помощью
+	new или malloc, т.к. это приведет к утечке памяти и к нестабильности
+	работы программы. 
+	</DD></DL>
+<P>
+<B>GetInfo</B> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">long GetInfo(); 
+	</DD></DL>
+<P>
+Параметры: нет 
+</P>
+<P>Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">long &ndash; версия компоненты 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">1С:Предприятие вызывает этот метод
+	для получения информации о компоненте. Например: версия 3.56 &mdash;
+	число 3560. 
+	</DD></DL>
+<P>
+<B>Done</B> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">void Done(); 
+	</DD></DL>
+<P>
+Возвращаемое значение: нет 
+</P>
+<P>Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">1С:Предприятие вызывает этот метод
+	при завершении работы с объектом компоненты. Этот метод вызывается
+	независимо от результата инициализации объекта (метод Init). 
+	</DD></DL>
+<P>
+<SPAN LANG="de-DE"><B>RegisterExtensionAs</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="de-DE">: </SPAN>
+</P>
+<DL>
+	<DD LANG="de-DE" STYLE="margin-bottom: 0.5cm">bool
+	RegisterExtensionAs(WCHAR_T ** wsExtName) 
+	</DD></DL>
+<P>
+Параметры<SPAN LANG="de-DE">: </SPAN>
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="de-DE">&lt;wsExtName&gt;
+	</SPAN>Тип<SPAN LANG="de-DE">: WCHAR_T **. </SPAN>Наименование
+	расширения встроенного языка 1С:Предприятия. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">bool &ndash; успешность выполнения 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">В переменную wsExtName помещается
+	наименование расширения. Память для строки выделяется объектом
+	компоненты функцией AllocMemory менеджера памяти. 1С:Предприятие
+	освобождает эту память вызовом FreeMemory. 
+	</DD></DL>
+<P>
+Первое свойство имеет порядковый номер 0. 
+</P>
+<P><B>GetNProps</B> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">long GetNProps() 
+	</DD></DL>
+<P>
+Параметры: нет 
+</P>
+<P>Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">long 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Возвращает количество свойств
+	данного расширения, 0 &ndash; при отсутствии свойств. 
+	</DD></DL>
+<P>
+<SPAN LANG="en-US"><B>FindProp</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">long FindProp(const
+	WCHAR_T * wsPropName); 
+	</DD></DL>
+<P>
+Параметры<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">&lt; wsPropName
+	&gt; </SPAN>Тип<SPAN LANG="en-US">: const WCHAR_T *. </SPAN>Наименование
+	свойства. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">long 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Возвращает порядковый номер
+	свойства с именем pszPropName; -1, если свойство не найдено 
+	</DD></DL>
+<P>
+<SPAN LANG="en-US"><B>GetPropName</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">const WCHAR_T *
+	GetPropName(long lPropNum, long lPropAlias) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;lPropNum&gt; Тип: long.
+	Порядковый номер свойства. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;lAliasNum&gt; Тип: long. Язык наименования: 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&middot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 &mdash;
+	английское наименование; 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&middot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 &mdash;
+	локальное наименование. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">const WCHAR_T * 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">В возвращаемое значение помещается
+	имя свойства с порядковым номером lPropNum; если свойство с таким
+	номером отсутствует, возвращается NULL. Память для строки выделяется
+	объектом компоненты функцией AllocMemory менеджера памяти.
+	1С:Предприятие освобождает эту память вызовом FreeMemory. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<P><B>GetPropVal</B> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">bool GetPropVal(const long
+	lPropNum, tVariant* pvarPropVal) 
+	</DD></DL>
+<P>
+Параметры<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">&lt;lPropNum&gt;
+	</SPAN>Тип<SPAN LANG="en-US">: const long. </SPAN>Порядковый номер
+	свойства. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;pvarPropVal&gt; Тип: tVariant*. Указатель на структуру tVariant,
+	содержащую при возврате значение свойства. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">bool &ndash; успешность выполнения 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">В переменную pvPropVal помещается
+	значение свойства с порядковым номером lPropNum; если свойство с
+	таким номером отсутствует или недоступно для чтения, должен иметь
+	тип VTYPE_EMPTY. Если возвращаемое значение имеет тип строка, то
+	компонента выделяет память для нее функцией AllocMemory.
+	1С:Предприятие освободит эту память. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<P><B>SetPropVal</B> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">bool SetPropVal(const long
+	lPropNum, tVariant* pvarPropVal); 
+	</DD></DL>
+<P>
+Параметры<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">&lt;lPropNum&gt;
+	</SPAN>Тип<SPAN LANG="en-US">: const long. </SPAN>Порядковый номер
+	свойства. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;pvarPropVal&gt; Тип: tVariant *. Структура tVariant, содержащая
+	новое значение свойства. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">bool &ndash; успешность выполнения 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Переменная pvPropVal содержит
+	значение свойства с порядковым номером lPropNum; если свойство с
+	таким номером отсутствует, недоступно для записи или тип переданного
+	pvPropVal не совместим, метод должен возвратить false. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<P><SPAN LANG="en-US"><B>IsPropReadable</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">bool
+	IsPropReadable(const long lPropNum) 
+	</DD></DL>
+<P>
+Параметры<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">&lt;lPropNum&gt;
+	</SPAN>Тип<SPAN LANG="en-US">: const long. </SPAN>Порядковый номер
+	свойства. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">bool 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Возвращается флаг возможности
+	чтения свойства с порядковым номером lPropNum: false &mdash;
+	свойство недоступно для чтения, true &mdash; свойство допускает
+	чтение. Если свойство с таким номером отсутствует, метод должен
+	возвращать false. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<P><SPAN LANG="en-US"><B>IsPropWritable</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">bool
+	IsPropWritable(const long lPropNum) 
+	</DD></DL>
+<P>
+Параметры<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">&lt;lPropNum&gt;
+	</SPAN>Тип<SPAN LANG="en-US">: const long. </SPAN>Порядковый номер
+	свойства. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">bool 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Возвращается флаг возможности
+	записи свойства с порядковым номером lPropNum: false &mdash;
+	свойство недоступно для записи, true &mdash; свойство допускает
+	запись. Если свойство с таким номером отсутствует, метод должен
+	возвращать false. 
+	</DD></DL>
+<P>
+Первый метод имеет порядковый номер 0. Первый параметр метода имеет
+порядковый номер 0. 
+</P>
+<P><B>GetNMethods</B> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">long GetNMethods(); 
+	</DD></DL>
+<P>
+Параметры:нет 
+</P>
+<P>Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">long 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Возвращается количество методов
+	данного расширения, 0 - при отсутствии методов. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<P><SPAN LANG="en-US"><B>FindMethod</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">long FindMethod(const
+	WCHAR_T* wsMethodName); 
+	</DD></DL>
+<P>
+Параметры<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">&lt;wsMethodName&gt;
+	</SPAN>Тип<SPAN LANG="en-US">: const WCHAR_T*. </SPAN>Имя метода 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">long 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Возвращается порядковый номер
+	метода с именем bstrMethodName; -1 &mdash; при отсутствии метода. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&nbsp; 
+	</DD></DL>
+<P>
+<SPAN LANG="en-US"><B>GetMethodName</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">const WCHAR_T*
+	GetMethodName(const long lMethodNum, const long lMethodAlias) 
+	</DD></DL>
+<P>
+Параметры<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">&lt;lMethodNum&gt;
+	</SPAN>Тип<SPAN LANG="en-US">: const long. </SPAN>Порядковый номер
+	метода<SPAN LANG="en-US">. </SPAN>
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<SPAN LANG="en-US">&lt;lAliasNum&gt; </SPAN>Тип<SPAN LANG="en-US">:
+	const long. </SPAN>Язык имени метода: 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	0 &mdash; английское наименование; 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	1 &mdash; локальное наименование. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">const <SPAN LANG="en-US">WCHAR</SPAN>_<SPAN LANG="en-US">T</SPAN>*
+		</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Возвращается имя свойства с
+	порядковым номером; если свойство с таким номером отсутствует,
+	возвращается NULL. Память для строки выделяется объектом компоненты
+	функцией AllocMemory менеджера памяти. 1С:Предприятие освобождает
+	эту память вызовом FreeMemory. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<P><B>GetNParams</B> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">long GetNParams(const long
+	lMethodNum) 
+	</DD></DL>
+<P>
+Параметры<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">&lt;lMethodNum&gt;
+	</SPAN>Тип<SPAN LANG="en-US">: const long. </SPAN>Порядковый номер
+	метода. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">long 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Возвращается количество параметров
+	метода с порядковым номером lMethodNum; если метод с таким номером
+	отсутствует или не имеет параметров, возвращается 0. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<P><SPAN LANG="en-US"><B>GetParamDefValue</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">bool
+	GetParamDefValue(const long lMethodNum, const long lParamNum,
+	tVariant *pvarParamDefValue) 
+	</DD></DL>
+<P>
+Параметры<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">&lt;lMethodNum&gt;
+	</SPAN>Тип<SPAN LANG="en-US">: const long. </SPAN>Порядковый номер
+	метода<SPAN LANG="en-US">. </SPAN>
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<SPAN LANG="en-US">&lt;lParamNum&gt; </SPAN>Тип<SPAN LANG="en-US">:
+	const long. </SPAN>Порядковый номер параметра<SPAN LANG="en-US">. </SPAN>
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<SPAN LANG="en-US">&lt; pvarParamDefValue &gt; </SPAN>Тип<SPAN LANG="en-US">:
+	tVariant *. </SPAN>Указатель на структуру tVariant, содержащую при
+	возврате значение параметра по умолчанию. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">bool 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">В переменную pvParamDefVal
+	помещается значение по умолчанию параметра lParamNum метода с
+	порядковым номером lMethodNum. В pvParamDefVal помещается тип
+	VTYPE_EMPTY, если метод с таким номером отсутствует, не имеет
+	параметра с номером или параметр не имеет значения по умолчанию. В
+	случае, если значение по умолчанию имеет тип VTYPE_PSTR, VTYPE_PWSTR
+	или VTYPE_BLOB, компонента выделяет память функцией AllocMemory
+	менеджера памяти, записывает туда данные и сохраняет этот адрес в
+	соответствующем поле структуры. 1С:Предприятие освободит эту память
+	вызовом FreeMemory. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<P><B>HasRetVal</B> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">bool HasRetVal(const long
+	lMethodNum) 
+	</DD></DL>
+<P>
+Параметры<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">&lt;lMethodNum&gt;
+	</SPAN>Тип<SPAN LANG="en-US">: const long. </SPAN>Порядковый номер
+	метода. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">bool 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Возвращается флаг наличия у метода
+	с порядковым номером lMethodNum возвращаемого значения: true для
+	методов с возвращаемым значением и false в противном случае. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<P><SPAN LANG="en-US"><B>CallAsProc</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">bool CallAsProc(const
+	long lMethodNum, tVariant* paParams,&nbsp; const long lSizeArray) 
+	</DD></DL>
+<P>
+Параметры<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">&lt;lMethodNum&gt;
+	</SPAN>Тип<SPAN LANG="en-US">: const long. </SPAN>Порядковый номер
+	метода. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;paParams&gt; Тип: tVariant* Указатель на массив структур
+	tVariant, содержащий значения параметров метода. Если метод не имеет
+	параметров, то содержит NULL. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;lSizeArray&gt; Тип: const long. Размер массива paParams. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">true &ndash; соответствующий метод
+	вызван, ошибок не произошло. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	false &ndash; отсутствует метод или произошла ошибка времени
+	исполнения (runtime error). 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Выполняется метод с порядковым
+	номером lMethodNum. Если метод возвращает false, возникает ошибка
+	времени выполнения и выполнение модуля 1С:Предприятия прекращается.
+	Память для массива параметров выделяется и освобождается
+	1С:Предприятием. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<P><B>CallAsFunc</B> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">bool CallAsFunc(const
+	long lMethodNum, tVariant* pvarRetValue, tVariant* paParams, const
+	long lSizeArray) 
+	</DD></DL>
+<P>
+Параметры<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">&lt;lMethodNum&gt;
+	</SPAN>Тип<SPAN LANG="en-US">: const long. </SPAN>Порядковый номер
+	метода<SPAN LANG="en-US">. </SPAN>
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<SPAN LANG="en-US">&lt;pvarRetValue&gt; </SPAN>Тип<SPAN LANG="en-US">:
+	tVariant*. </SPAN>Указатель на структуру tVariant, содержащую
+	возвращаемое значение. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;paParams&gt; Тип: tVariant*. Указатель на массив структур
+	tVariant, содержащий значения параметров метода. Если метод не имеет
+	параметров, то содержит NULL. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;lSizeArray&gt; Тип: const long. Размер массива paParams. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">true &ndash; соответствующий метод
+	вызван, ошибок не произошло. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	false &ndash; отсутствует метод или произошла ошибка времени
+	исполнения (runtime error). 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Выполняется метод с порядковым
+	номером lMethodNum. Если метод возвращает false, возникает ошибка
+	времени выполнения и выполнение модуля 1С:Предприятия прекращается.
+	Память для массива параметров выделяется 1С:Предприятием. Если
+	возвращаемое значение имеет тип строка или двоичные данные,
+	компонента выделяет память функцией AllocMemory менеджера памяти,
+	записывает туда данные и сохраняет этот адрес в соответствующем поле
+	структуры. 1С:Предприятие освободит эту память вызовом FreeMemory. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<P><B>SetLocale</B> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">void</SPAN>
+	<SPAN LANG="en-US">SetLocale</SPAN>(<SPAN LANG="en-US">const</SPAN>
+	<SPAN LANG="en-US">WCHAR</SPAN>_<SPAN LANG="en-US">T</SPAN>*
+	<SPAN LANG="en-US">wsLocale</SPAN>) 
+	</DD></DL>
+<P>
+Параметры<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">&lt;wsLocale&gt;
+	</SPAN>Тип<SPAN LANG="en-US">: const WCHAR_T*. </SPAN>Строка
+	локализации в формате &lt;language&gt;_&lt;REGION&gt;. Например: для
+	Linux &ndash; &quot;ru_RU&quot;, для Windows - &quot;rus_RUS&quot;. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">нет 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">1С:Предприятие вызывает этот метод
+	для локализации компоненты в соответствии с используемым кодом
+	локализации. Компонента&nbsp; может настроить свое окружение для
+	правильного вывода информации. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<H3 CLASS="western"><A NAME="_cpp_intf_enterprise"></A>Интерфейс
+1С:Предприятия 
+</H3>
+<P>При инициализации объекта компоненты, ему передается указатель на
+интерфейс 1С:Предпритятия, с помощью которого можно вызывать ниже
+перечисленные методы. Следует помнить, что эти методы не
+будут&nbsp;работать на сервере приложений. 
+</P>
+<P>&nbsp; 
+</P>
+<P><SPAN LANG="en-US"><B>AddError</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">bool AddError(unsigned
+	short wcode, const WCHAR_T* source, 
+	</DD></DL>
+<P>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<SPAN LANG="en-US">const WCHAR_T* descr, long scode) </SPAN>
+</P>
+<P>Параметры<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">&lt;wcode&gt;
+	</SPAN>Тип<SPAN LANG="en-US">: unsigned short. </SPAN>Код сообщения<SPAN LANG="en-US">.
+	</SPAN>
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<SPAN LANG="en-US">&lt;source&gt; </SPAN>Тип<SPAN LANG="en-US">:
+	const WCHAR_T*. </SPAN>Источник ошибки 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<SPAN LANG="en-US">&lt;descr&gt; </SPAN>Тип<SPAN LANG="en-US">:
+	const WCHAR_T*. </SPAN>Сообщение ошибки 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;scode&gt; Тип: Код ошибки 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">bool 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Добавляет информационное сообщение
+	при работе методов расширения языка. Если возвращаемое значение true
+	&ndash; информация об ошибке успешно добавлена. Если scode имеет не
+	нулевое значение &ndash; будет сгенерировано исключение, которое
+	может быть перехвачено и обработано средствами встроенного языка
+	1С:Предприятия. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&nbsp; 
+	</DD></DL>
+<P>
+Возможные коды сообщений и поведение 1С:Предприятия подробно описаны
+в разделе &laquo;Информационные сообщения о работе объекта&raquo; для
+COM-компонент. 
+</P>
+<P>&nbsp; 
+</P>
+<P><SPAN LANG="en-US"><B>RegisterProfileAs</B></SPAN> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">bool</SPAN>
+	<SPAN LANG="en-US">RegisterProfileAs</SPAN>(<SPAN LANG="en-US">WCHAR</SPAN>_<SPAN LANG="en-US">T</SPAN>*
+	<SPAN LANG="en-US">wsProfileName</SPAN>) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;<SPAN LANG="en-US">wsProfileName</SPAN>&gt;
+	Тип: <SPAN LANG="en-US">WCHAR</SPAN>_<SPAN LANG="en-US">T</SPAN>*.
+	Наименование списка параметров компоненты. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">bool 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Регистрирует список параметров
+	компоненты с именем wsProfileName. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<P><SPAN LANG="en-US"><B>Read</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">bool Read(WCHAR_T*
+	pszPropName, tVariant* pVal, long *pErrCode, WCHAR_T**
+	errDescriptor) 
+	</DD></DL>
+<P>
+Параметры<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">&lt;pszPropName&gt;
+	</SPAN>Тип<SPAN LANG="en-US">: WCHAR_T*.&nbsp; </SPAN>Имя параметра 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<SPAN LANG="en-US">&lt;pVal&gt; </SPAN>Тип<SPAN LANG="en-US">:
+	tVariant _t*. </SPAN>Указатель на возвращаемое значение параметра 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt; pErrCode &gt; Тип: long*. Указатель на переменную, куда будет
+	помещен код ошибки, если возникнет. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;errDescriptor&gt; Тип: <SPAN LANG="en-US">WCHAR</SPAN>_<SPAN LANG="en-US">T</SPAN>**.
+	Двойной указатель на переменную, куда будет помещено описание
+	ошибки. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">bool 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Читает сохраненное значение
+	параметра компоненты с именем pszPropName. В случае неудачи чтения,
+	и ненулевого значения errDescriptor, 1С:Предприятие выделит память и
+	поместит описание ошибки. Компонента должна освободить память
+	вызовом FreeMemory. Для возвращаемых данных типа строка, память
+	также выделяется 1С:Предприятием и адрес сохраняется в
+	соответствующем поле структуры tVariant. Компонента должна
+	освободить ее вызовом FreeMemory. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<P><B>Write</B> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">bool</SPAN>
+	<SPAN LANG="en-US">Write</SPAN>(<SPAN LANG="en-US">WCHAR</SPAN>_<SPAN LANG="en-US">T</SPAN>*
+	<SPAN LANG="en-US">pszPropName</SPAN>, <SPAN LANG="en-US">tVariant</SPAN>
+	*<SPAN LANG="en-US">pVar</SPAN>) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;<SPAN LANG="en-US">pszPropName</SPAN>&gt;
+	Тип: <SPAN LANG="en-US">WCHAR</SPAN>_<SPAN LANG="en-US">T</SPAN>*.&nbsp;
+	Имя параметра 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;pVar&gt; Тип: tVariant _t*. Указатель на значение параметра 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">bool 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Сохраняет значение параметра
+	компоненты с именем pszPropName. В случае неудачи возвращается
+	false. 
+	</DD></DL>
+<P>
+&nbsp;&nbsp;</P>
+<P><SPAN LANG="en-US"><B>SetEventBufferDepth</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">bool
+	SetEventBufferDepth( long lDepth) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;lDepth&gt; Тип: long. Длина
+	очереди сообщений. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">bool. True &ndash; новый размер
+	установлен 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Устанавливает размер очереди
+	событий для данного объекта. Если текущее количество событий в
+	очереди больше устанавливаемой длины, последние события удаляются. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<P><B>GetEventBufferDepth</B> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">long GetEventBufferDepth() 
+	</DD></DL>
+<P>
+Параметры: нет 
+</P>
+<P>Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">long 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Возвращается размер очереди событий
+	для данного объекта. 
+	</DD></DL>
+<P>
+&nbsp;&nbsp;</P>
+<P><SPAN LANG="en-US"><B>ExternalEvent</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">bool
+	ExternalEvent(WCHAR_T* wsSource, WCHAR_T* wsMessage, WCHAR_T*
+	wsData) 
+	</DD></DL>
+<P>
+Параметры<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">&lt;wsSource&gt;
+	</SPAN>Тип<SPAN LANG="en-US">: WCHAR_T*. </SPAN>Строка с
+	наименованием источника сообщения. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;wsMessage&gt; Тип: <SPAN LANG="en-US">WCHAR</SPAN>_<SPAN LANG="en-US">T</SPAN>*.
+	Строка с наименованием сообщения. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;wsData&gt; Тип: <SPAN LANG="en-US">WCHAR</SPAN>_<SPAN LANG="en-US">T</SPAN>*.
+	Строка c параметрами сообщения. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">true &ndash; событие помещено в
+	очередь 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	false &ndash; очередь переполнена, обработка событий недоступна или
+	неизвестная ошибка 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Помещает событие в очередь,
+	записывая источник события, наименование и параметры события. При
+	обработке события эти данные передаются процедуре
+	ОбработкаВнешнегоСобытия. При вызове метода ExternalEvent дальнейшая
+	обработка события происходит следующим образом: событие записывается
+	в очередь событий (если очередь полностью занята, событие теряется),
+	затем при отсутствии системных событий из очереди берется первое
+	событие (если очередь не пуста) и запускается процесс обработки
+	внешних событий. Этот процесс повторяется для всех объектов внешних
+	компонент. Таким образом, обработка внешних событий синхронизируется
+	с обработкой системных событий. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<P><SPAN LANG="en-US"><B>CleanEventBuffer</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">void
+	CleanEventBuffer() 
+	</DD></DL>
+<P>
+Описание<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Очищает очередь событий, удаляя все
+	присутствующие в очереди события. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<P><SPAN LANG="en-US"><B>SetStatusLine</B></SPAN> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">bool</SPAN>
+	<SPAN LANG="en-US">SetStatusLine</SPAN>(<SPAN LANG="en-US">WCHAR</SPAN>_<SPAN LANG="en-US">T</SPAN>*
+	<SPAN LANG="en-US">wsStatusLine</SPAN>) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt; <SPAN LANG="en-US">wsStatusLine</SPAN>
+	&gt; Тип: <SPAN LANG="en-US">WCHAR</SPAN>_<SPAN LANG="en-US">T</SPAN>*.
+	Текст строки состояния. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">true &mdash; текст отображен в
+	строке состояния 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	false &ndash; функция недоступна или неизвестная ошибка 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Устанавливает текст строки
+	состояния. 
+	</DD></DL>
+<P>
+&nbsp;</P>
+<P><SPAN LANG="en-US"><B>ResetStatusLine</B></SPAN> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">void</SPAN>
+	<SPAN LANG="en-US">ResetStatusLine</SPAN>() 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Инициализирует строку состояния. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<H3 CLASS="western"><A NAME="_tVariant_Enterprise"></A>Соответствие
+типов tVariant и 1С:Предприятия 
+</H3>
+<P>Тип tVariant объявлен в файле types.h (входит в комплект
+поставки). 
+</P>
+<P>&nbsp;&nbsp;&nbsp; * VTYPE_EMPTY соответствует неопределенному
+значению. При передаче в качестве параметра метода подставляется
+значение параметра по умолчанию; 
+</P>
+<P>&nbsp;&nbsp;&nbsp; * значения типа VTYPE_I2, VTYPE_I4,
+VTYPE_ERROR, VTYPE_UI1 соответствуют целочисленному значению и
+находятся в lVal; 
+</P>
+<P>&nbsp;&nbsp;&nbsp; * значения типа VTYPE_BOOL, соответствуют
+булевому значению и находятся в bVal; 
+</P>
+<P>&nbsp;&nbsp;&nbsp; * значения типа VTYPE_R4, VTYPE_R8, VTYPE_CY
+соответствуют дробному значению и находятся в dblVal; 
+</P>
+<P>&nbsp;&nbsp;&nbsp; * значение типа VTYPE_DATE соответствует
+значению даты и находится в date; 
+</P>
+<P>&nbsp;&nbsp;&nbsp; * значение типа VTYPE_TM соответствует значению
+даты и находится в struct tm tmVal; 
+</P>
+<P>&nbsp;&nbsp;&nbsp; * значение типа VTYPE_PSTR соответствует
+строковому значению (char*) и находится в pstrVal с указанием длины в
+strLen; 
+</P>
+<P>&nbsp;&nbsp;&nbsp; * значение типа VTYPE_PWSTR соответствует
+строковому значению (<SPAN LANG="en-US">WCHAR</SPAN>_<SPAN LANG="en-US">T</SPAN>*)
+и находится в pwstrVal с указанием длины в wstrLen; 
+</P>
+<P>&nbsp;&nbsp;&nbsp; * значение типа VTYPE_BLOB соответствует
+двоичным данным&nbsp; и находится в pstrVal с указанием длины в
+strLen; 
+</P>
+<P>&nbsp; 
+</P>
+<P>Типы VTYPE_INTERFACE, VTYPE_VARIANT не поддерживаются. 
+</P>
+<P>&nbsp; 
+</P>
+<H3 CLASS="western"><A NAME="_cpp_warning"></A>Особенности разработки
+компонент с использованием Native API. 
+</H3>
+<P>Компонента с использованием этой технологии является
+платформозависимой. Поэтому разработчик должен строить вариант
+компоненты как для x86 платформы, так и для x86-64. В процессе
+использования, разработчик конфигурации определит тип платформы и
+загрузит нужный вариант компоненты. 
+</P>
+<P>Так же следует помнить, что компонента может быть загружена на
+сервере приложений 1С:Предприятия под управлением ОС Windows или
+Linux. Поэтому желательно реализацию делать кроссплатформенной. 
+</P>
+<P>1С:Предприятие работает со строками в формате <SPAN LANG="en-US">Unicode</SPAN>
+(<SPAN LANG="en-US">WCHAR</SPAN>_<SPAN LANG="en-US">T</SPAN>) с
+размером символа 2 байта. Размерность совпадает со встроенным типом
+<SPAN LANG="en-US">wchar</SPAN>_<SPAN LANG="en-US">t</SPAN> для ОС
+<SPAN LANG="en-US">Windiws</SPAN>, но может&nbsp; отличаться для ОС
+<SPAN LANG="en-US">Linux</SPAN>, где размер <SPAN LANG="en-US">wchar</SPAN>_<SPAN LANG="en-US">t</SPAN>,
+обычно, составляет 4 байта. Разработчик компоненты должен
+самостоятельно выполнять преобразование символьных данных этого типа.</P>
+<P>Если внешняя компонента использует дополнительные модули, это
+нужно указывать в документации к компоненте. Используемые run-time
+библиотеки желательно статически включать в компоненту, так как на
+компьютере, где будет использоваться компонента, их может не
+оказаться или они могут быть другой версии. Так же в компоненту для
+Windows нужно включать манифест. 
+</P>
+<P>При возникновении исключительных ситуаций, они должны быть
+перехвачены и обработаны в компоненте, а информация о них передана в
+1С:Предприятие с помощью метода AddError. 
+</P>
+<P>В случае использования компоненты на сервере приложений
+1С:Предприятия, внешние события не обрабатываются. Так же не будут
+обрабатываться методы работы со строкой статуса и сохранения
+параметров. 
+</P>
+<P>Компонента может возвращать любые двоичные данные, например &ndash;
+сформированное изображение штрих-кода. Для этого данные помещаются в
+поле pstrVal структуры tVariant, в strLen &ndash; размер данных, а
+тип устанавливается в VTYPE_BLOB. 1С:Предприятие использует для них
+тип ДвоичныеДанные. 
+</P>
+<P>Значение даты передается во внешнюю компоненту в виде стуктуры tm
+и указанием типа VTYPE_TM. Компонента может вернуть значение даты как
+в struct tm, так и в типе DATE Windows, указав тип VTYPE_DATE.
+1С:Предприятие обработает его корректно. 
+</P>
+<P>Возвращаемые значения типа VTYPE_ARRAY и VTYPE_BYREF не
+поддерживаются. 
+</P>
+<H1><A NAME="_com_comp"></A><FONT SIZE=3>Создание компонент, с
+использованием технологии </FONT><FONT SIZE=3><SPAN LANG="en-US">COM</SPAN></FONT>
+</H1>
+<P>Технология внешних компонент с использованием COM может также
+применяться в 1С:Предприятии более ранних версий (7.7, 8.0 и 8.1).</P>
+<P>При загрузке внешней компоненты функцией
+ЗагрузитьВнешнююКомпоненту или
+ПодключитьВнешнююКомпоненту(&lt;МестонахожденияКомпоненты&gt;,
+&lt;ИмяМетки&gt;, &nbsp;ТипВнешнейКомпоненты.COM) 1С:Предприятие
+определяет ProgID COM&mdash;объекта компоненты следующим образом: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">ProgID </SPAN>имеет
+	вид <SPAN LANG="en-US">&lt;Vendor&gt;.&lt;Component&gt;; </SPAN>
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	в качестве первой части (&lt;Vendor&gt;) используется строка
+	&ldquo;AddIn&rdquo;; 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	в качестве второй части (&lt;Component&gt;) используется строка с ID
+	100 из таблицы строк компоненты. Строка может иметь вид
+	&ldquo;Name1|Name2|...|NameN&rdquo;, и в этом случае будут созданы
+	все объекты с ProgID вида &ldquo;AddIn.NameX&rdquo;. Если такая
+	строка отсутствует, то используется имя файла внешней компоненты без
+	расширения. 
+	</DD></DL>
+<P>
+При использовании функции
+ПодключитьВнешнююКомпоненту(&lt;ИмяОбъектаКомпоненты&gt;) ProgID
+COM-объекта компоненты передается в качестве параметра функции и
+также может представляться строкой вида ProgID1| ProgID2|...|ProgIDX.
+</P>
+<H3 CLASS="western"><A NAME="_com_init"></A>Инициализация и выгрузка
+компоненты 
+</H3>
+<P>Для инициализации и выгрузки компоненты используется интерфейс
+IInitDone. Этот интерфейс наследован от IUnknown и предназначен для
+инициализации объекта и завершения работы с объектом. 
+</P>
+<P><SPAN LANG="en-US"><B>Init</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">HRESULT Init(IDispatch
+	*pBackConnection) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;pBackConnection&gt; Тип:
+	IDispatch. Указатель на интерфейс 1С:Предприятия. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">E_FAIL - при инициализации
+	произошла ошибка 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	S_OK - инициализация прошла успешно 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">При загрузке 1С:Предприятие
+	инициализирует объект компоненты, вызывая метод Init и передавая
+	указатель на IDispatch. Объект может сохранить этот указатель для
+	дальнейшего использования. Все остальные интерфейсы 1С:Предприятия
+	объект может получить, вызвав метод QueryInterface переданного ему
+	интерфейса IDispatch. Объект должен возвратить S_OK, если
+	инициализация прошла успешно, и E_FAIL при возникновении ошибки.
+	Данный метод может использовать интерфейс IErrorLog&nbsp;для вывода
+	информации об ошибках. При этом инициализация считается неудачной,
+	если одна из переданных структур EXCEPINFO имеет поле scode, не
+	равное S_OK. Все переданные в IErrorLog данные обрабатываются при
+	возврате из данного метода. В момент вызова этого метода свойство
+	AppDispatch не определено. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&nbsp; 
+	</DD></DL>
+<P>
+<B>Done</B> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">HRESULT Done(void) 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">S_OK - объект завершил работу 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">1С:Предприятие вызывает этот метод
+	при завершении работы с объектом компоненты. Объект должен
+	возвратить S_OK. Этот метод вызывается независимо от результата
+	инициализации объекта (метод Init). 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&nbsp; 
+	</DD></DL>
+<P>
+<SPAN LANG="en-US"><B>GetInfo</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">HRESULT
+	GetInfo(SAFEARRAY **pInfo) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;PInfo&gt; Тип: SAFEARRAY**.
+	Двойной указатель на массив структур VARIANT. Память для массива
+	выделяется 1С:Предприятием. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">S_OK - информация о компоненте
+	возвращена 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">1С:Предприятие вызывает этот метод
+	для получения информации о компоненте. В текущей версии 2.0
+	компонентной технологии в элемент с индексом 0 необходимо записать
+	версию поддерживаемой компонентной технологии в формате V_I4 &mdash;
+	целого числа, при этом старший номер версии записывается в тысячные
+	разряды, младший номер версии &mdash; в единицы. Например: версия
+	3.56 &mdash; число 3560. В настоящее время все объекты внешних
+	компонент могут поддерживать версию 1.0 (соответствует числу 1000)
+	или 2.0 (соответствует 2000). Память для pInfo выделяется
+	1С:Предприятием. Метод должен возвращать S_OK. 
+	</DD></DL>
+<P>
+Объект внешней компоненты обязан реализовать этот интерфейс. При его
+отсутствии компонента не будет загружена. 
+</P>
+<P>&nbsp;</P>
+<H3 CLASS="western"><A NAME="_com_extLang"></A>Расширение встроенного
+языка 
+</H3>
+<P>Для расширения встроенного языка компонента должна реализовать
+интерфейс ILanguageExtender. Этот интерфейс унаследован от IUnknown и
+предназначен для расширения встроенного языка 1С:Предприятия. Для
+использования этого расширения необходимо вызвать функцию
+СоздатьОбъект (Новый в 1С:Предприятии 8), передав ей строку вида
+&ldquo;AddIn.&lt;ИмяРасширения&gt;&rdquo;, где &lt;ИмяРасширения&gt;
+возвращается методом этого интерфейса. Затем можно использовать
+созданный объект, вызывая его методы и свойства. 
+</P>
+<P>Версия 2.0 позволяет создавать несколько объектов одного типа
+&ldquo;AddIn.&lt;ИмяРасширения&gt;&rdquo;, однако компонента должна
+явно указать поддержку версии 2.0 в методе GetInfo. В противном
+случае допускается создание только одного объекта. 
+</P>
+<P><B>RegisterExtensionAs</B> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">HRESULT</SPAN>
+	<SPAN LANG="en-US">RegisterExtensionAs</SPAN>(<SPAN LANG="en-US">BSTR</SPAN>
+	*<SPAN LANG="en-US">pExtensionName</SPAN>) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<P>&nbsp; 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;pExtensionName&gt; Тип: BSTR*.
+	Наименование расширения встроенного языка 1С:Предприятия. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">* S_OK 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">В переменную pExtensionName
+	помещается наименование расширения. Память для строки выделяется
+	объектом компоненты стандартными системными функциями для работы с
+	COM&mdash;строками (например, SysAllocString. 1С:Предприятие
+	освобождает эту память вызовом SysFreeString). 
+	</DD></DL>
+<P>
+Первое свойство имеет порядковый номер 0. 
+</P>
+<P><SPAN LANG="en-US"><B>GetNProps</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">HRESULT GetNProps(long
+	*plProps) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;plProps&gt; Тип: long*.
+	Указатель на переменную, содержащую при возврате количество свойств
+	расширения. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">* S_OK 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Возвращает количество свойств
+	данного расширения, 0 &ndash; при отсутствии свойств. Память для
+	переменной plProps выделяется 1С:Предприятием. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<P><B>FindProp</B> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">HRESULT FindProp(BSTR
+	pszPropName,long*plPropNum) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;pszPropName&gt; Тип: BSTR.
+	Наименование свойства. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;plPropNum&gt; Тип: long*. Указатель на переменную, содержащую
+	при возврате порядковый номер свойства. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">* S_OK - операция завершена успешно
+		</DD><DD STYLE="margin-bottom: 0.5cm">
+	* S_FALSE - свойство с именем pszPropName в данном расширении
+	отсутствует 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Возвращает порядковый номер
+	свойства с именем pszPropName; -1, если свойство не найдено. Память
+	для переменной plPropNum выделяется 1С:Предприятием. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&nbsp; 
+	</DD></DL>
+<P>
+<B>GetPropName</B> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">HRESULT GetPropName(long
+	lPropNum,long lAliasNum,BSTR *pPropName) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;lPropNum&gt; Тип: long.
+	Порядковый номер свойства. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;lAliasNum&gt; Тип: long. Язык наименования: 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&middot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 &mdash;
+	английское наименование; 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&middot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 &mdash;
+	локальное наименование. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;pPropName&gt; Тип: BSTR*. Указатель на строку, содержащую при
+	возврате наименование свойства. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<P>Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&middot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	S_OK - операция завершена успешно 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&middot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; S_FALSE -
+	свойство с номером lPropNum в данном расширении отсутствует 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">В переменную pPropName помещается
+	имя свойства с порядковым номером lPropNum; если свойство с таким
+	номером отсутствует, в pPropName помещается пустая строка. Память
+	для строки выделяется объектом компоненты стандартными системными
+	функциями для работы с COM&mdash;строками (например, SysAllocString.
+	1С:Предприятие освобождает эту память вызовом SysFreeString). 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&nbsp; 
+	</DD></DL>
+<P>
+<B>GetPropVal</B> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">HRESULT GetPropVal(long
+	lPropNum,VARIANT *pvPropVal) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;lPropNum&gt; Тип: long.
+	Порядковый номер свойства. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;pvPropVal&gt; Тип: VARIANT*. Указатель на структуру VARIANT,
+	содержащую при возврате значение свойства. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">S_OK - операция завершена успешно 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	S_FALSE - свойство с номером lPropNum в данном расширении
+	отсутствует или недоступно для чтения. 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">В переменную pvPropVal помещается
+	значение свойства с порядковым номером lPropNum; если свойство с
+	таким номером отсутствует или недоступно для чтения, должен иметь
+	тип VT_EMPTY. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&nbsp; 
+	</DD></DL>
+<P>
+<SPAN LANG="en-US"><B>SetPropVal</B></SPAN> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">HRESULT</SPAN>
+	<SPAN LANG="en-US">SetPropVal</SPAN>(<SPAN LANG="en-US">long</SPAN>
+	<SPAN LANG="en-US">lPropNum</SPAN>, <SPAN LANG="en-US">VARIANT</SPAN>
+	*<SPAN LANG="en-US">pvPropVal</SPAN>) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;lPropNum&gt; Тип: long.
+	Порядковый номер свойства. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;pvPropVal&gt; Тип: VARIANT*. Структура VARIANT, содержащая новое
+	значение свойства. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">S_OK - операция завершена успешно 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	S_FALSE - свойство с номером lPropNum в данном расширении
+	отсутствует или недоступно для записи. 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Переменная pvPropVal содержит
+	значение свойства с порядковым номером lPropNum; если свойство с
+	таким номером отсутствует, недоступно для записи или тип переданного
+	pvPropVal не приводится к необходимому, метод должен возвратить
+	S_FALSE. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&nbsp; 
+	</DD></DL>
+<P>
+<SPAN LANG="en-US"><B>IsPropReadable</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">HRESULT
+	IsPropReadable(long lPropNum, BOOL *pboolPropReadable) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;lPropNum&gt; Тип: long.
+	Порядковый номер свойства. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;pboolPropReadable&gt; Тип: BOOL*. Указатель на переменную,
+	содержащую при возврате флаг возможности чтения свойства. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">S_OK - операция завершена успешно. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	S_FALSE - свойство с номером lPropNum в данном расширении
+	отсутствует. 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">В переменную pboolPropReadable
+	помещается флаг возможности чтения свойства с порядковым номером
+	lPropNum: FALSE(0) &mdash; свойство недоступно для чтения, TRUE(1) &mdash;
+	свойство допускает чтение. Если свойство с таким номером
+	отсутствует, метод должен возвращать S_FALSE. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&nbsp; 
+	</DD></DL>
+<P>
+<SPAN LANG="en-US"><B>IsPropWritable</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">HRESULT
+	IsPropWritable(long lPropNum, BOOL *pboolPropWritable) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;lPropNum&gt; Тип: long.
+	Порядковый номер свойства. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;pboolPropWritable&gt; Тип: BOOL*. Указатель на переменную,
+	содержащую при возврате флаг возможности записи свойства. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">S_OK - операция завершена успешно. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	S_FALSE - свойство с номером в данном расширении отсутствует. 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">В переменную pboolPropWritable
+	помещается флаг возможности записи свойства с порядковым номером
+	lPropNum: FALSE(0) &mdash; свойство недоступно для записи, TRUE(1) &mdash;
+	свойство допускает запись. Если свойство с таким номером
+	отсутствует, метод должен возвращать S_FALSE. 
+	</DD></DL>
+<P>
+Первый метод имеет порядковый номер 0. Первый параметр метода имеет
+порядковый номер 0. 
+</P>
+<P><SPAN LANG="en-US"><B>GetNMethods</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">HRESULT
+	GetNMethods(long *plMethods) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;plMethods&gt; Тип: long*.
+	Указатель на переменную, содержащую при возврате количество методов
+	расширения языка. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">S_OK 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">В переменную plMethods помещается
+	количество методов данного расширения, 0 - при отсутствии методов. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&nbsp; 
+	</DD></DL>
+<P>
+<SPAN LANG="en-US"><B>FindMethod</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">HRESULT
+	FindMethod(BSTR bstrMethodName, long *plMethNum) 
+	</DD></DL>
+<P>
+Параметры<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">&lt;bstrMethodName&gt;
+	</SPAN>Тип<SPAN LANG="en-US">: BSTR. </SPAN>Имя метода 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;plMethNum&gt; Тип: long*. Указатель на переменную, содержащую
+	при возврате порядковый номер метода с именем methodName. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">S_OK 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">В переменную plMethNum помещается
+	порядковый номер метода с именем bstrMethodName; -1 &mdash; при
+	отсутствии метода. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&nbsp; 
+	</DD></DL>
+<P>
+<SPAN LANG="en-US"><B>GetMethodName</B></SPAN> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">HRESULT</SPAN>
+	<SPAN LANG="en-US">GetMethodName</SPAN>(<SPAN LANG="en-US">long</SPAN>
+	<SPAN LANG="en-US">lMethodNum</SPAN>, <SPAN LANG="en-US">long</SPAN>
+	<SPAN LANG="en-US">lAliasNum</SPAN>, <SPAN LANG="en-US">BSTR</SPAN>
+	*<SPAN LANG="en-US">pbstrMethName</SPAN>) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;lMethodNum&gt; Тип: long.
+	Порядковый номер метода. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;lAliasNum&gt; Тип: long. Язык имени метода: 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	0 &mdash; английское наименование; 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	1 &mdash; локальное наименование. 
+	</DD></DL>
+<P>
+&lt;pbstrMethName&gt; Тип: BSTR*. Указатель на строку, содержащую при
+возврате имя метода. 
+</P>
+<P>Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">S_OK - операция завершена успешно 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	S_FALSE - метод с номером в данном расширении отсутствует 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">В переменную помещается имя
+	свойства с порядковым номером; если свойство с таким номером
+	отсутствует, в помещается пустая строка. Память для строки
+	выделяется объектом компоненты стандартными системными функциями для
+	работы с COM&mdash;строками (например, SysAllocString.
+	1С:Предприятие освобождает эту память вызовом SysFreeString). 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&nbsp; 
+	</DD></DL>
+<P>
+<B>GetNParams</B> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">HRESULT GetNParams(long lMethodNum,
+	long *plMethParams) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;lMethodNum&gt; Тип: long.
+	Порядковый номер метода. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;plMethParams&gt; Тип: long*. Указатель на переменную, содержащую
+	при возврате количество параметров метода. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">S_OK - операция завершена успешно 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	S_FALSE - метод с номером в данном расширении отсутствует 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">В переменную plMethParams
+	помещается количество параметров метода с порядковым номером
+	lMethodNum; если метод с таким номером отсутствует или не имеет
+	параметров, в помещается 0. Память для переменной выделяется
+	1С:Предприятием. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&nbsp; 
+	</DD></DL>
+<P>
+<B>GetParamDefValue</B> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">HRESULT GetParamDefValue(long
+	lMethodNum, long lParamNum, VARIANT *pvParamDefVal) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;lMethodNum&gt; Тип: long.
+	Порядковый номер метода. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;lParamNum&gt; Тип: long. Порядковый номер параметра. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;pvParamDefVal&gt; Тип: VARIANT*. Указатель на структуру VARIANT,
+	содержащую при возврате значение параметра по умолчанию. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">S_OK - операция завершена успешно
+	(вне зависимости от наличия у параметра значения по умолчанию) 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	S_FALSE - метод или параметр метода отсутствует 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">В переменную pvParamDefVal
+	помещается значение по умолчанию параметра lParamNum метода с
+	порядковым номером lMethodNum. В pvParamDefVal помещается тип
+	VT_EMPTY, если метод с таким номером отсутствует, не имеет параметра
+	с номером или параметр не имеет значения по умолчанию. Память для
+	переменной выделяется 1С:Предприятием. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&nbsp; 
+	</DD></DL>
+<P>
+<B>HasRetVal</B> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">HRESULT HasRetVal(long
+	lMethodNum,BOOL *pboolHasRetVal) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;lMethodNum&gt; Тип: long.
+	Порядковый номер метода. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;pboolHasRetVal&gt; Тип: BOOL*. Указатель на переменную,
+	содержащую при возврате флаг наличия возвращаемого значения. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">S_OK - операция завершена успешно 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	S_FALSE - метод отсутствует 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">В переменную pboolHasRetVal
+	помещается флаг наличия возвращаемого значения у метода с порядковым
+	номером lMethodNum: TRUE для методов с возвращаемым значением и
+	FALSE в противном случае. Память для переменной выделяется
+	1С:Предприятием. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&nbsp; 
+	</DD></DL>
+<P>
+<B>CallAsProc</B> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">HRESULT CallAsProc(long lMethodNum,
+	SAFEARRAY **pVars) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;lMethodNum&gt; Тип: long.
+	Порядковый номер метода. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;pVars&gt; Тип: SAFEARRAY**. Двойной указатель на массив структур
+	VARIANT, содержащий значения параметров метода. Если метод не имеет
+	параметров, то содержит NULL. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">S_OK - соответствующий метод
+	вызван, ошибок не произошло. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	E_FAIL - соответствующий метод вызван, произошла ошибка времени
+	исполнения (runtime error). Исполнение модуля прекращается. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	S_FALSE &ndash; отсутствует метод, соответствующий переданному
+	lMethodNum. 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Выполняется метод с порядковым
+	номером lMethodNum. Если метод возвращает E_FAIL, возникает ошибка
+	времени выполнения и выполнение модуля 1С:Предприятия прекращается.
+	Память для массива параметров выделяется 1С:Предприятием. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&nbsp; 
+	</DD></DL>
+<P>
+<B>CallAsFunc</B> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">HRESULT CallAsFunc(long lMethodNum,
+	VARIANT *pRetValue, SAFEARRAY **pVars) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;lMethodNum&gt; Тип: long.
+	Порядковый номер метода. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;pRetValue&gt; Тип: VARIANT*. Указатель на структуру VARIANT, при
+	возврате содержащую возвращаемое значение. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;pVars&gt; Тип: SAFEARRAY**. Двойной указатель на массив структур
+	VARIANT, содержащий значения параметров метода. Если метод не имеет
+	параметров, то содержит NULL. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">S_OK - соответствующий метод
+	вызван, ошибок не произошло. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	E_FAIL - соответствующий метод вызван, произошла ошибка времени
+	исполнения (runtime error). Исполнение модуля прекращается. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	S_FALSE &ndash; отсутствует метод, соответствующий переданному
+	lMethodNum. 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Выполняется метод с порядковым
+	номером lMethodNum. Если метод возвращает E_FAIL, возникает ошибка
+	времени выполнения и выполнение модуля 1С:Предприятия прекращается.
+	Память для массива выделяется 1С:Предприятием. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&nbsp; 
+	</DD></DL>
+<H3 CLASS="western">
+<A NAME="_com_locale"></A>Локализация 
+</H3>
+<P><B>SetLocale</B> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">HRESULT&nbsp; SetLocale(BSTR
+	bstrLocale) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;bstrLocale&gt; Тип: BSTR.
+	Строка локализации в формате &lt;language&gt;-&lt;REGION&gt;.
+	Например: для России &ndash; &ldquo;ru-RU&rdquo;. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">S_OK 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">1С:Предприятие вызывает этот метод
+	для локализации компоненты в соответствии с используемым кодом
+	локализации. Компонента&nbsp; может настроить свое окружение для
+	правильного вывода информации. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<H3 CLASS="western"><A NAME="_COM_VARIANT_Exchange"></A>Использование
+типа COM VARIANT при обмене данными 
+</H3>
+<P>Вызов функции компоненты 
+</P>
+<P>&nbsp; 
+</P>
+<P>Соответствие между типами 1С:Предприятия и COM: 
+</P>
+<P>&nbsp; &nbsp;&nbsp; * неопределенное значение соответствует
+VT_EMPTY; 
+</P>
+<P>&nbsp;&nbsp;&nbsp; * целочисленное значение соответствует VT_I4 и
+помещается в lVal; 
+</P>
+<P>&nbsp;&nbsp;&nbsp; * дробное значение соответствует VT_R8 и
+помещается в dblVal; 
+</P>
+<P>&nbsp; 
+</P>
+<P>Следует учесть, что внутреннее представление может иметь точность,
+превосходящую точность типа double (около 15 цифр после запятой),
+поэтому при конвертации может происходить потеря точности. 
+</P>
+<P>&nbsp;&nbsp;&nbsp; * значение даты соответствует VT_DATE и
+помещается в date; 
+</P>
+<P>&nbsp;&nbsp;&nbsp; * строковое значение соответствует VT_BSTR и
+помещается в bstrVal; 
+</P>
+<P>&nbsp;&nbsp;&nbsp; * объекты соответствуют VT_DISPATCH и
+помещаются в pdispVal. При использовании объектов 1С:Предприятия в
+компоненте необходимо определить DISPIDы методов объекта (вызвав
+GetIDsOfNames) и затем вызвать Invoke; 
+</P>
+<P>&nbsp; 
+</P>
+<P>При конвертации COM-объекта в IDispatch проверяются ситуации
+взаимного вызова &ldquo;1С:Предприятие-&gt;Компонента-&gt;1С:Предприятие&rdquo;
+и &ldquo;Компонента-&gt;1С:Предприятие-&gt;Компонента&rdquo; и все
+необходимые операции проводятся корректно. 
+</P>
+<P>Возвращение значений из компоненты 
+</P>
+<P>&nbsp; 
+</P>
+<H3 CLASS="western">Соответствие между типами 1С:Предприятия и COM: 
+</H3>
+<P>&nbsp;&nbsp; * VT_EMPTY соответствует неопределенному значению.
+При передаче в качестве параметра метода подставляется значение
+параметра по умолчанию; 
+</P>
+<P>&nbsp;&nbsp;&nbsp; * значения типа VT_I2, VT_I4, VT_BOOL,
+VT_ERROR, VT_UI1 соответствуют целочисленному значению и находятся в
+lVal; 
+</P>
+<P>&nbsp;&nbsp;&nbsp; * значения типа VT_R4, VT_R8, VT_CY
+соответствуют дробному значению и находятся в dblVal; 
+</P>
+<P>&nbsp;&nbsp;&nbsp; * значение типа VT_DATE соответствует значению
+даты и находится в date; 
+</P>
+<P>&nbsp;&nbsp;&nbsp; * значение типа VT_BSTR соответствует
+строковому значению и находится в bstrVal; 
+</P>
+<P>&nbsp;&nbsp;&nbsp; * значение типа VT_ARRAY соответствует массиву
+и находится в parray (только для 1С:Предприятия 8); 
+</P>
+<P>&nbsp;&nbsp;&nbsp; * значение типа VT_DISPATCH соответствует
+значению объекта и находится в pdispVal. 
+</P>
+<P>&nbsp; 
+</P>
+<P>Типы VT_DECIMAL, VT_VARIANT и VT_UNKNOWN не поддерживаются. 
+</P>
+<P>При конвертации IDispatch в COM-объект проверяются ситуации
+взаимного вызова &ldquo;1С:Предприятие-&gt;Компонента-&gt;1С:Предприятие&rdquo;
+и &ldquo;Компонента-&gt;1С:Предприятие-&gt;Компонента&rdquo; и все
+необходимые операции проводятся корректно. 
+</P>
+<P>&nbsp; 
+</P>
+<H3 CLASS="western"><A NAME="_com_call_1C"></A>Вызов метода объекта
+1С:Предприятия из компоненты 
+</H3>
+<P>Для вызова метода объекта необходимо вызвать метод Invoke
+полученного ранее интерфейса IDispatch, передав ему все необходимые
+параметры, в том числе номер (DISPID) вызываемого метода объекта.
+Этот номер можно получить из метода GetIDsOfNames интерфейса
+IDispatch, передав ему название метода объекта. 
+</P>
+<P>&nbsp; 
+</P>
+<P>Соответствие между параметрами метода объекта и массивом структур
+VARIANT прямое: первому параметру соответствует структура с индексом
+0, второму параметру - структура с индексом 1 и т.д. При передаче
+параметров метода объекта следует учесть, что необходимо передавать
+значения всех параметров, включая значения параметров, подставляемые
+по умолчанию. Для подстановки значений по умолчанию достаточно
+присвоить тип VT_EMPTY (VT_ERROR для 1С:Предприятия 8)
+соответствующей структуре VARIANT. 
+</P>
+<P>&nbsp;</P>
+<H3 CLASS="western"><A NAME="_COM_intf_1C"></A>COM-интерфейсы
+1C:Предприятия 
+</H3>
+<P>Все нижеприведенные интерфейсы могут быть получены вызовом
+QueryInterface переданного при инициализации объекта указателя на
+IDispatch. Их идентификаторы (IID) Вы можете найти в шаблонах,
+включенных в данную поставку. 
+</P>
+<H4 CLASS="western">Сохранение параметров объекта компоненты 
+</H4>
+<P>Для сохранения параметров объект внешней компоненты может
+использовать механизмы сохранения 1С:Предприятия через интерфейс
+IPropertyProfile. Этот интерфейс унаследован от интерфейса
+IPropertyBag, стандартного для COM, и отличается единственным
+методом: 
+</P>
+<P>&nbsp; 
+</P>
+<P><SPAN LANG="en-US"><B>RegisterProfileAs</B></SPAN> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">HRESULT</SPAN>
+	<SPAN LANG="en-US">RegisterProfileAs</SPAN>(<SPAN LANG="en-US">BSTR</SPAN>
+	<SPAN LANG="en-US">bstrProfileName</SPAN>) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;bstrProfileName&gt; Тип: BSTR.
+	Наименование списка параметров компоненты. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">S_OK - регистрация прошла успешно. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	E_FAIL - при регистрации произошла ошибка. Информация об ошибке
+	выводится в окно сообщений. 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Регистрирует список параметров
+	компоненты с именем bstrProfileName. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<P>При загрузке и сохранении параметры могут быть структурированы в
+виде дерева &ndash; для этого при передаче в методах Read и Write имя
+параметра необходимо записывать в виде
+&ldquo;Узел1\Узел2\...\УзелN\ИмяПараметра:ЗначениеПараметраПоУмолчанию&rdquo;.
+При работе с 1С:Предприятием 7.5 параметры сохраняются в
+регистрационной базе данных системы (Registry) в ключе
+HKEY_CURRENT_USER\Software\1C\1Cv7\7.5\Options, при работе с
+1С:Предприятием 7.7 - в ключе
+HKEY_CURRENT_USER\Software\1C\1Cv7\7.7\Options, при работе с
+1С:Предприятием 8 &ndash; в профиле, соответствующем сочетанию
+&ldquo;компьютер &ndash; ИБ - пользователь&rdquo;. 
+</P>
+<P>&nbsp; 
+</P>
+<H3 CLASS="western"><A NAME="_com_infomessage"></A>Информационные
+сообщения о работе объекта 
+</H3>
+<P>Для сообщения пользователю информации о своей работе объект может
+использовать интерфейс IErrorLog, стандартный для COM (описание
+метода AddError интерфейса IErrorLog приводится здесь исключительно
+для удобства работы). Возникающие сообщения обработываются как в
+течение работы программы (при асинхронном помещении их в очередь),
+так и в следующих случаях: при возврате из метода инициализации Init
+и при возврате из метода расширения. Все сообщения помещаются в
+очередь и обрабатываются по порядку появления. Количество
+запоминаемых сообщений не ограничено. 
+</P>
+<P>&nbsp; 
+</P>
+<P><B>AddError</B> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">HRESULT AddError(BSTR pszPropName,
+	LPEXCEPINFO pExcepInfo) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;pszPropName&gt; Тип: BSTR. В
+	настоящей реализации параметр pszPropName игнорируется. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;pExcepInfo&gt; Тип: LPEXCEPINFO. Указатель на структуру
+	EXCEPINFO. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">S_OK - сообщение добавлено успешно.
+		</DD><DD STYLE="margin-bottom: 0.5cm">
+	E_OUTOFMEMORY - Недостаточно памяти. 
+	</DD></DL>
+<P>
+Возможны другие коды возврата, сигнализирующие об ошибке. 
+</P>
+<P>Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Добавляет информационное сообщение
+	при работе методов расширения языка. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<P>Возможные коды сообщений: 
+</P>
+<P>#define ADDIN_E_NONE 1000 
+</P>
+<P LANG="en-US">#define ADDIN_E_ORDINARY 1001 
+</P>
+<P LANG="en-US">#define ADDIN_E_ATTENTION 1002 
+</P>
+<P LANG="en-US">#define ADDIN_E_IMPORTANT 1003 
+</P>
+<P LANG="en-US">#define ADDIN_E_VERY_IMPORTANT 1004 
+</P>
+<P LANG="en-US">#define ADDIN_E_INFO 1005 
+</P>
+<P LANG="en-US">#define ADDIN_E_FAIL 1006 
+</P>
+<P LANG="en-US">#define ADDIN_E_MSGBOX_ATTENTION 1007 
+</P>
+<P LANG="en-US">#define ADDIN_E_MSGBOX_INFO 1008 
+</P>
+<P LANG="en-US">#define ADDIN_E_MSGBOX_FAIL 1009 
+</P>
+<P>Код сообщения помещается в wCode структуры EXEPINFO. Коды ошибок
+1000 &ndash; 2000 зарезервированы. 
+</P>
+<P>При обработке сообщения выводится окно предупреждения (Message
+Box) для кодов ADDIN_E_MSGBOX_ATTENTION, ADDIN_E_MSGBOX_INFO и
+ADDIN_E_MSGBOX_FAIL или строка с сообщением в окне сообщений для
+остальных кодов. В общем случае строка имеет вид: 
+</P>
+<P>&lt;Иконка&gt; &lt;ИсточникСообщения&gt; : &lt;ОписаниеСообщения&gt;
+(Код сообщения = &lt;КодСообщения&gt;), 
+</P>
+<P>где &lt;Иконка&gt;: 
+</P>
+<P>ADDIN_E_NONE &ndash; иконка отсутствует 
+</P>
+<P LANG="en-US">ADDIN_E_ORDINARY - 
+</P>
+<P LANG="en-US">ADDIN_E_ATTENTION - 
+</P>
+<P LANG="en-US">ADDIN_E_IMPORTANT - 
+</P>
+<P LANG="en-US">ADDIN_E_VERY_IMPORTANT - 
+</P>
+<P LANG="en-US">ADDIN_E_INFO - 
+</P>
+<P><SPAN LANG="en-US">ADDIN</SPAN>_<SPAN LANG="en-US">E</SPAN>_<SPAN LANG="en-US">FAIL</SPAN>
+- (7.5, 7.7) или (8) 
+</P>
+<P>Иконка отсутствует, если используется код cообщения, не
+совпадающий с вышеперечисленными. 
+</P>
+<P>&lt;ИсточникОшибки&gt; : поле bstrSource в структуре EXCEPINFO 
+</P>
+<P>&lt;ОписаниеОшибки&gt; : поле bstrDescription в структуре
+EXCEPINFO 
+</P>
+<P>&lt;КодОшибки&gt; : числовой код cообщения в десятичном виде. Код
+cообщения не выводится, если используется один из вышеперечисленных
+кодов. 
+</P>
+<P>Для кодов ADDIN_E_MSGBOX_ATTENTION, ADDIN_E_MSGBOX_INFO и
+ADDIN_E_MSGBOX_FAIL выводится окно сообщения с кнопкой OK и иконками
+MB_ICONEXCLAMATION, MB_ICONINFORMATION и MB_ICONERROR соответственно.
+</P>
+<P>Сообщение имеет вид: 
+</P>
+<P>&lt;ИсточникСообщения&gt;:&lt;ОписаниеСообщения&gt;(Код cообщения
+= &lt;КодСообщения&gt;), 
+</P>
+<P>&nbsp; 
+</P>
+<P>где &lt;ИсточникСообщения&gt;, &lt;ОписаниеСообщения&gt; и
+&lt;КодСообщения&gt; см. выше. 
+</P>
+<H3 CLASS="western"><A NAME="_com_externalevent"></A>Внешние события 
+</H3>
+<P>При возникновении асинхронного события (например, считывания
+штрих-кода) объект может использовать интерфейс IAsyncEvent для
+создания внешнего события в 1С:Предприятии. Интерфейс IAsyncEvent
+унаследован от IUnknown. Все события помещаются в очередь и
+обрабатываются по порядку появления. Количество запоминаемых событий
+ограничено длиной очереди. При инициализации длина очереди
+устанавливается равной 1 и может быть изменена вызовом
+SetEventBufferDepth, а текущий размер очереди получен с помощью
+метода GetEventBufferDepth и. Для каждого объекта внешней компоненты
+поддерживается своя очередь событий. Обработка внешнего события
+производится предопределенной процедурой ОбработкаВнешнегоСобытия и
+обработчиками внешних событий в модулях форм. 
+</P>
+<P>&nbsp; 
+</P>
+<P><SPAN LANG="en-US"><B>SetEventBufferDepth</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">HRESULT
+	SetEventBufferDepth(long lDepth) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;lDepth&gt; Тип: long. Длина
+	очереди сообщений. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">S_OK - размер очереди установлен
+	успешно 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	E_FAIL - при установке размера очереди произошла ошибка 
+	</DD></DL>
+<P>
+Возможны другие коды возврата, сигнализирующие об ошибке. 
+</P>
+<P>Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Устанавливает размер очереди
+	событий для данного объекта. Если текущее количество событий в
+	очереди больше устанавливаемой длины, последние события удаляются. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<P><SPAN LANG="en-US"><B>GetEventBufferDepth</B></SPAN> 
+</P>
+<P>Синтаксис<SPAN LANG="en-US">: </SPAN>
+</P>
+<DL>
+	<DD LANG="en-US" STYLE="margin-bottom: 0.5cm">HRESULT
+	GetEventBufferDepth(long *plDepth) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;plDepth&gt; Тип: long*.
+	Указатель на переменную, содержащую при возврате длину очереди
+	сообщений. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">S_OK - размер очереди возвращен
+	успешно 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	E_FAIL - при получении размера очереди произошла ошибка 
+	</DD></DL>
+<P>
+Возможны другие коды возврата, сигнализирующие об ошибке. 
+</P>
+<P>Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">В переменную plDepth помещается
+	размер очереди событий для данного объекта. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<P><SPAN LANG="en-US"><B>ExternalEvent</B></SPAN> 
+</P>
+<P>Синтаксис: 
+</P>
+<P><SPAN LANG="en-US">HRESULT</SPAN> <SPAN LANG="en-US">ExternalEvent</SPAN>(<SPAN LANG="en-US">BSTR</SPAN>
+<SPAN LANG="en-US">bstrWho</SPAN>, <SPAN LANG="en-US">BSTR</SPAN>
+<SPAN LANG="en-US">bstrWhat</SPAN>, <SPAN LANG="en-US">BSTR</SPAN>
+<SPAN LANG="en-US">bstrData</SPAN>) 
+</P>
+<P>Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;bstrWho&gt; Тип: BSTR. Строка с
+	наименованием источника сообщения. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;bstrWhat&gt; Тип: BSTR. Строка с наименованием сообщения. 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	&lt;bstrData&gt; Тип: BSTR. Строка c параметрами сообщения. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">S_OK &ndash; событие помещено в
+	очередь 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	E_FAIL &ndash; очередь переполнена или неизвестная ошибка 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	E_OUTOFMEMORY &ndash; отсутствие памяти 
+	</DD></DL>
+<P>
+Возможны другие коды возврата, сигнализирующие об ошибке. 
+</P>
+<P>Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Помещает событие в очередь,
+	записывая источник события, наименование и параметры события. При
+	обработке события эти данные передаются процедуре
+	ОбработкаВнешнегоСобытия. При вызове метода ExternalEvent дальнейшая
+	обработка события происходит следующим образом: событие записывается
+	в очередь событий (если очередь полностью занята, событие теряется),
+	затем при отсутствии системных событий из очереди берется первое
+	событие (если очередь не пуста) и запускается процесс обработки
+	внешних событий. Этот процесс повторяется для всех объектов внешних
+	компонент. Таким образом, обработка внешних событий синхронизируется
+	с обработкой системных событий. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<P><B>CleanBuffer</B> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">HRESULT CleanBuffer() 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">S_OK &mdash; очередь успешно
+	очищена 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	E_FAIL &ndash; при очищении очереди произошла ошибка 
+	</DD></DL>
+<P>
+Возможны другие коды возврата, сигнализирующие об ошибке. 
+</P>
+<P>Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Очищает очередь событий, удаляя все
+	присутствующие в очереди события. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<H3 CLASS="western"><A NAME="_com_statusline"></A>Работа со строкой
+состояния 
+</H3>
+<P>Для информирования пользователя о своем состоянии объект
+компоненты может использовать интерфейс IStatusLine. При вызове
+метода SetStatusLine переданный текст немедленно отображается в
+строке состояния. При вызове метода ResetStatusLine в строке
+состояния отображается стандартный текст. 
+</P>
+<P><SPAN LANG="en-US"><B>SetStatusLine</B></SPAN> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">HRESULT</SPAN>
+	<SPAN LANG="en-US">SetStatusLine</SPAN>(<SPAN LANG="en-US">BSTR</SPAN>
+	<SPAN LANG="en-US">bstrStatusText</SPAN>) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;bstrStatusText&gt; Тип: BSTR.
+	Текст строки состояния. 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">S_OK &mdash; текст отображен в
+	строке состояния 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	E_FAIL &ndash; неизвестная ошибка 
+	</DD></DL>
+<P>
+Возможны другие коды возврата, сигнализирующие об ошибке. 
+</P>
+<P>Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Устанавливает текст строки
+	состояния. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<P><B>ResetStatusLine</B> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">HRESULT ResetStatusLine() 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">S_OK &mdash;строка состояния
+	успешно переинициализирована 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	E_FAIL &ndash; неизвестная ошибка 
+	</DD></DL>
+<P>
+Возможны другие коды возврата, сигнализирующие об ошибке. 
+</P>
+<P>Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Инициализирует строку состояния. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<H3 CLASS="western">Создание окон в среде 1С:Предприятия 8 
+</H3>
+<P>Внешние компоненты могут создавать свои окна для отображения
+различной информации, используя интерфейс <B>IExtWndsSupport</B>.
+Компонента может создавать два типа окон: модальные диалоги,
+немодальные диалоги. 
+</P>
+<P><I>Модальные диалоги </I>
+</P>
+<P>Модальные диалоги создаются самой компонентой, но при их создании
+необходимо в качестве родительского окна указать окно, возвращаемое
+методом GetAppMainFrame для того, чтобы диалог не воспринимался
+операционной системой как отдельная задача с кнопкой на полосе задач.
+Работа системы 1С:Предприятие приостанавливается до завершения работы
+с диалогом. 
+</P>
+<P><I>Немодальные диалоги </I>
+</P>
+<P>Немодальные диалоги также создаются самой компонентой, но при их
+создании необходимо в качестве родительского окна указать окно,
+возвращаемое методом GetAppMDIFrame для того, чтобы диалог не
+воспринимался операционной системой как отдельная задача с кнопкой на
+полосе задач. Диалог не останавливает работу 1С:Предприятия и по сути
+аналогичен формам 1С:Предприятия. Однако следует учесть, что
+созданный диалог не входит в список открытых окон и не появляется на
+панели окон, поэтому использование таких диалогов не рекомендуется
+(вместо них можно использовать формы самого 1С:Предприятия). 
+</P>
+<P>&nbsp; 
+</P>
+<P>В 1С:Предприятии 8 возможность создания окон сохранена в
+сокращенном виде для совместимости с существующими компонентами. Для
+отображения нестандартной информации в окнах 1С:Предприятия 8
+рекомендуется использовать формы с элементами управления ActiveX или
+же Активные документы. Ниже приведены описания методов интерфейса
+IExtWndsSupport. Возможность работы с окнами отсутствует в
+Веб-клиенте.</P>
+<P>&nbsp; 
+</P>
+<P><SPAN LANG="en-US"><B>GetAppMainFrame</B></SPAN> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">HRESULT</SPAN>
+	<SPAN LANG="en-US">GetAppMainFrame</SPAN>(<SPAN LANG="en-US">HWND</SPAN>
+	*<SPAN LANG="en-US">pHWnd</SPAN>) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;pHWnd&gt; Тип: HWND*. Указатель
+	на дескриптор окна 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">S_OK 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Возвращает дескриптор основного
+	окна 1С:Предприятия. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<P><SPAN LANG="en-US"><B>GetAppMDIFrame</B></SPAN> 
+</P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><SPAN LANG="en-US">HRESULT</SPAN>
+	<SPAN LANG="en-US">GetAppMDIFrame</SPAN>(<SPAN LANG="en-US">HWND</SPAN>
+	*<SPAN LANG="en-US">pHWnd</SPAN>) 
+	</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">&lt;pHWnd&gt; Тип: HWND*. Указатель
+	на дескриптор окна 
+	</DD></DL>
+<P>
+Возвращаемое значение: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">S_OK 
+	</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Возвращает дескриптор активного
+	окна 1С:Предприятия. 
+	</DD></DL>
+<P>
+&nbsp; 
+</P>
+<P>&nbsp; 
+</P>
+<H3 CLASS="western">Доступ к 1С:Предприятию через механизм OLE
+Automation 
+</H3>
+<P>Версия технологии: 2.0 
+</P>
+<P>Переданный в методе Init указатель на IDispatch позволяет получить
+доступ к 1С:Предприятию через механизм OLE Automation. Из полученного
+указателя можно получить свойство AppDispatch, доступное только для
+чтения. Это свойство содержит указатель на IDispatch 1C:Предприятия
+(не путайте с переданным в Init). При подключении компоненты к
+Веб-клиенту, свойство <SPAN LANG="en-US">AppDispatch</SPAN> будет
+недоступно. Это надо учитывать при разработке компонент.</P>
+<P>Свойство AppDispatch становится доступно только после полной
+инициализации всей системы 1С:Предприятие, поэтому в момент загрузки
+внешней компоненты и вызова метода Init это свойство обеспечивает
+доступ не ко всем возможностям 1С:Предприятия. 
+</P>
+<P>Доступ к методам интерфейсов 1С:Предприятия через OLE Automation 
+</P>
+<P>Visual Basic имеет ограниченные возможности по работе с различными
+интерфейсами. Наиболее &ldquo;естественным&rdquo; механизмом для
+Visual Basic является работа с OLE Automation, для этого в VB
+используется тип Object, который представляет собой указатель на
+IDispatch. Поэтому 1С:Предприятие предоставляет возможность
+использовать механизм OLE Automation, передавая указатель на
+IDispatch в методе Init и обеспечивая вызовы методов
+вышеперечисленных интерфейсов через OLE Automation. 
+</P>
+<P>&nbsp; 
+</P>
+<H3 CLASS="western">Методы и свойства, доступные через OLE
+Automation: 
+</H3>
+<P>Версия технологии: 1.0 
+</P>
+<P>RegisterProfileAs(&lt;ИмяСпискаПараметров&gt;) 
+</P>
+<P>Read(&lt;ИмяПеременной&gt;,&lt;СсылкаНаVARIANT&gt;) 
+</P>
+<P>Write(&lt;ИмяПеременной&gt;,&lt;СсылкаНаVARIANT&gt;) 
+</P>
+<P>SetEventBufferDepth(&lt;ДлинаОчередиСобытий&gt;) 
+</P>
+<P>GetEventBufferDepth(&lt;СсылкаНаДлинуОчереди&gt;) 
+</P>
+<P>ClearEventBuffer() 
+</P>
+<P>ExternalEvent(&lt;СтрокаИсточникСобытия&gt;,&lt;СтрокаНаименованиеСобытия&gt;,&lt;СтрокаПараметрыСобытия&gt;)
+</P>
+<P>AddError(&lt;КодСообщения&gt;,&lt;СтрокаИсточникСообщения&gt;,&lt;СтрокаОписаниеСообщения&gt;,&lt;КодОшибки&gt;)
+</P>
+<P>SetStatusLine(&lt;СтрокаСостояния&gt;) 
+</P>
+<P>ResetStatusLine() 
+</P>
+<P>&nbsp; 
+</P>
+<P>Версия технологии: 2.0 (дополнительно к 1.0) 
+</P>
+<P>(Перечисленные ниже методы и свойства недоступны при работе с
+Веб-клиентом)</P>
+<P>свойство AppDispatch 
+</P>
+<P>GetAppMainFrame(&lt;Указатель на дескриптор окна&gt;) 
+</P>
+<P>GetAppMDIFrame(&lt;Указатель на дескриптор окна&gt;) 
+</P>
+<H3 CLASS="western"><A NAME="_com_warning"></A>Особенности разработки
+компонент с использованием <SPAN LANG="en-US">COM</SPAN></H3>
+<P>Компоненты, разработанные с использованием технологии COM, могут
+быть изначально не установлены на компьютере пользователя. Метод
+ПодключитьВнешнююКомпоненту(&lt;МестонахожденияКомпоненты&gt;,
+&lt;ИмяМетки&gt;, &nbsp;ТипВнешнейКомпоненты.COM), получает из
+информационной базы файл внешней компоненты, если последняя находится
+там, и вызывает функцию регистрации объектов компоненты
+DllRegisterServer. Если пользователь ограничен в правах, то
+регистрация и подключение внешней компоненты закончится неудачей.
+Разработчик должен предусмотреть возможность регистрации компоненты
+для пользователя, под его текущими правами. В поставляемом примере
+<SPAN LANG="en-US">COM</SPAN>-компоненты показано, как это можно
+сделать. Если внешняя компонента имеет свой инсталлятор, то она
+должна регистрироваться для компьютера. 
+</P>
+<H3 CLASS="western"><A NAME="_Подготовка_внешних_компонент_к_рабо"></A>
+Подготовка внешних компонент к работе с Веб-клиентом.</H3>
+<P>Взаимодействие внешних компонент с Веб-клиентом осуществляется при
+помощи расширений. В примерах приведены проекты для построения
+расширений для Firefox и Internet Explorer. В целях безопасности,
+каждое расширение может работать только с одной компонентой, заданной
+на этапе компиляции. Каждое расширение состоит из собственно внешней
+компоненты и адаптера браузера. Внешней компонентой может быть уже
+созданная компонента по технологии <SPAN LANG="en-US">COM</SPAN>. 
+</P>
+<P>Скриптовый язык программирования браузеров является однопоточным.
+В связи с этим следует избегать обратных вызовов из не основного
+потока в компоненте. В других потоках будут работать только методы
+<SPAN LANG="en-US">ExternalEvent</SPAN>, <SPAN LANG="en-US">SetStatusLine</SPAN>,
+<SPAN LANG="en-US">ResetStatusLine</SPAN>. Следует учитывать эти
+особенности при разработке внешней компоненты.</P>
+<H4 CLASS="western"><A NAME="_Внешние_компоненты_для_Firefox."></A>Внешние
+компоненты для <SPAN LANG="en-US">Firefox</SPAN>.</H4>
+<H5 CLASS="western">Создание адаптера для Firefox.</H5>
+<P>При создании расширения для Firefox на компьютере разработчика
+нужно установить <SPAN LANG="en-US">xulrunner</SPAN>-<SPAN LANG="en-US">sdk</SPAN>.
+Последнюю версию можно взять с сайта <A HREF="http://releases.mozilla.org/pub/mozilla.org/xulrunner/releases/1.9.0.1/sdk/">Mozilla</A>.
+Для создания 64-битных расширений для ОС <SPAN LANG="en-US">GNU</SPAN>/Linux
+нужно использовать соответствующий пакет из состава дистрибутива.</P>
+<P>За основу при создании расширения, разработчик может взять проект
+AddInFF из каталога example. В файле config.<SPAN LANG="en-US">cpp</SPAN>
+нужно изменить значения текстовых переменных на свои значения и
+сгенерировать новые uuid. Имена переменных менять не надо. Также в
+переменной nameFileComponent указать имя внешней компоненты
+(например: AddInNative.dll), а в nameFilePrj &ndash; имя выходного
+файла проекта расширения (например: AddInFF.dll). В опциях
+компилятора, в разделе General-&gt;<SPAN LANG="en-US">Additional</SPAN>
+<SPAN LANG="en-US">Include</SPAN> <SPAN LANG="en-US">Directories</SPAN>
+поправить пути к заголовочным файлам addn\include,
+xulrunner-sdk\sdk\include, xulrunner-sdk\include,
+xulrunner-sdk\include\xpcom, xulrunner-sdk\include\xpconnect,
+xulrunner-sdk\include\js. В опциях компоновщика, в разделе
+<SPAN LANG="en-US">General</SPAN>-&gt;<SPAN LANG="en-US">Additional</SPAN>
+<SPAN LANG="en-US">Library</SPAN> <SPAN LANG="en-US">Directories</SPAN>
+исправить так, чтобы могли быть найдены каталоги
+xulrunner-sdk\sdk\lib и xulrunner-sdk\lib и <SPAN LANG="en-US">addin</SPAN>\lib
+из состава этой поставки. Сборка адаптера для ОС GNU/Linux должна
+производиться с флагами компилятора -fshort-wchar &ndash;<SPAN LANG="en-US">fno</SPAN>-<SPAN LANG="en-US">rtti</SPAN>.</P>
+<P>При использовании для создания расширения <SPAN LANG="en-US">xulrunner</SPAN>-<SPAN LANG="en-US">sdk
+</SPAN>версии 1.9.2 и выше, следует использовать библиотеки с
+суффиксом 1.9.2 из каталога <SPAN LANG="en-US">addin</SPAN>\lib.</P>
+<H5 CLASS="western">Создание установочного пакета.</H5>
+<P>Установочный пакет для Firefox представляет собой особым образом
+собранный ZIP-архив с расширением xpi. Структуру каталогов и файлов
+можно увидеть в каталоге example/PackageFF. Следует обратить внимание
+на формирование файлов install.rdf и install.js. В первом файле
+содержится информация о Вашем расширении. В нем обязательно нужно
+изменить uuid, находящийся под строкой &lt;!-- my package uuid--&gt;
+и заполнить строки после &lt;!-- my component info--&gt; Вашей
+информацией о расширении. Подробную информацию о заполнении
+install.rdf можно найти на сайте <A HREF="http://developer.mozilla.org/en/Install_Manifests">Mozilla</A>.
+В файле install.js содержится скрипт установки, в котором нужно в
+переменной XPCOM_FILES указать названия файлов внешней компоненты и
+адаптера. Файлы 1CEAdnWebFF.xpt из каталога <SPAN LANG="en-US">lib</SPAN>,
+компоненты и адаптера помещаются в каталог Components&nbsp; Сборка
+пакета производится в два этапа. На первом этапе подкаталог content в
+каталоге chrome упаковывается в ZIP-архив. У архива изменяется
+расширение на jar. После этого каталог content можно удалить. На
+втором этапе все содержимое каталога PackageFF (не включая сам
+PackageFF) упаковывается в один ZIP-архив. Полученный архив
+переименовывается, согласно названию компоненты с расширением <SPAN LANG="en-US">xpi</SPAN>.
+Для проверки правильности созданного пакета, нужно в меню Firefox
+выбрать Файл-Открыть файл&hellip; и выбрать вновь созданный пакет.</P>
+<P>Более подробно узнать о создании расширений для Firefox можно на
+сайте <A HREF="http://developer.mozilla.org/en/Creating_XPCOM_Components/Packaging_WebLock#Component_Installation_Overview">Mozilla</A>.</P>
+<H4 CLASS="western"><A NAME="_Внешние_компоненты_для_Internet_Exp"></A>
+Внешние компоненты для <SPAN LANG="en-US">Internet</SPAN> <SPAN LANG="en-US">Explorer</SPAN>.</H4>
+<H5 CLASS="western">Создание адаптера для Internet Explorer</H5>
+<P>За основу при создании расширения разработчик может взять проект
+AddInIE из каталога example. В idl-файле нужно изменить название
+библиотеки (например: library MyComponenIEtLib) и uuid coclass'ов и
+библиотеки. Все изменения, которые должен сделать разработчик в этом
+файле, помечены комментарием &laquo;//change&raquo;. <SPAN LANG="en-US">Uuid</SPAN>
+интерфейсов и их имена изменять не нужно. Желательно переименовать
+название проекта (например: MyComponent<SPAN LANG="en-US">IE</SPAN>).
+В файле <SPAN LANG="en-US">config</SPAN>.<SPAN LANG="en-US">cpp</SPAN>
+- изменить название включаемого файла &quot;AddInIE_i.h&quot; на
+сгенерированное средой разработки по файлу idl, и изменить значения
+текстовых переменных на имена <SPAN LANG="en-US">coclass</SPAN>&rsquo;ов
+библиотеки (например: &quot; MyComponen<SPAN LANG="en-US">tIE</SPAN>.AddInServiceEx&quot;).
+Переменной LIBID_AddInWebLib &ndash; присвоить значение LIBID Вашей
+библиотеки. Также в переменной nameFileComponent указать имя внешней
+компоненты (например: AddInNative.dll), а в nameFilePrj &ndash; имя
+выходного файла проекта расширения (например: MyComponen<SPAN LANG="en-US">t</SPAN>IE.dll).
+Расширение для Internet Explorer является COM-объектом, поэтому
+разработчик должен учитывать <A HREF="#_com_warning">Особенности
+разработки компонент с использованием COM</A>.</P>
+<H5 CLASS="western">Создание установочного пакета.</H5>
+<P>Установочный пакет для Internet Explorer представляет собой
+<SPAN LANG="en-US">CAB</SPAN>-архив. Для его построения понадобится
+<A HREF="http://support.microsoft.com/kb/310618">CabSDK</A>. В
+каталоге example\PackageIE находится пример для построения
+установочного пакета. Разработчик должен изменить название файла
+addin.inf на свое (например: MyComponent.<SPAN LANG="en-US">inf</SPAN>).
+В этот файл внести изменения, которые соответствуют проекту
+компоненты: имена файлов, каталогов, в переменной LayoutFile и секции
+inffile указать имя своего inf-файла. Разработчик должен обязательно
+предусмотреть способ корректного удаления внешней компоненты,
+установленной в <SPAN LANG="en-US">Internet</SPAN> <SPAN LANG="en-US">Explorer</SPAN>,
+через оснастку &laquo;<SPAN LANG="en-US">Add</SPAN>/<SPAN LANG="en-US">Remove</SPAN>
+<SPAN LANG="en-US">Program</SPAN>&raquo;. 1С:Предприятие, начиная с
+версии 8.2.11, умеет самостоятельно определить результат установки
+внешней компоненты. Но если предполагается использование компоненты с
+более ранними версиями 1С:Предприятия, то разработчик должен
+обязательно предусмотреть <SPAN LANG="ru-RU">способ оповещения
+пользователя об успешной установке компоненты </SPAN>Более подробно
+узнать о заполнении inf-файла можно в MSDN или на сайте <A HREF="http://msdn.microsoft.com/en-us/library/aa376858(VS.85).aspx">Microsoft</A>.
+Все исполняемые файлы, входящие в установочный пакет, и сам cab-файл
+должны быть подписаны цифровой подписью разработчика. Скрипт
+построения cab-файла приведен в buildcab.bat.</P>
+<H3 CLASS="western"><A NAME="_Подготовка_внешних_компонент_для_за"></A>
+Подготовка внешних компонент для загрузки в конфигурацию.</H3>
+<P>Внешние компоненты могут быть упакованы в ZIP-архив. Для работы с
+Веб-клиентом и тонким клиентом &ndash; это обязательное условие. В
+него должны войти собственно компоненты для ОС Windows (<SPAN LANG="en-US">x</SPAN>86,
+<SPAN LANG="en-US">x</SPAN>86_64), <SPAN LANG="en-US">GNU</SPAN>/<SPAN LANG="en-US">Linux</SPAN>
+(<SPAN LANG="en-US">x</SPAN>86, <SPAN LANG="en-US">x</SPAN>86_64),
+созданные расширения для <SPAN LANG="en-US">Internet</SPAN> <SPAN LANG="en-US">Explorer</SPAN>
+(<SPAN LANG="en-US">x</SPAN>86, <SPAN LANG="en-US">x</SPAN>86_64) и
+<SPAN LANG="en-US">Firefox</SPAN> (<SPAN LANG="en-US">Windows</SPAN>
+<SPAN LANG="en-US">x</SPAN>86, <SPAN LANG="en-US">GNU</SPAN>/<SPAN LANG="en-US">Linux</SPAN>
+<SPAN LANG="en-US">x</SPAN>86 и <SPAN LANG="en-US">x</SPAN>86_64). В
+составе архива включается файл MANIFEST.XML с описанием содержимого:</P>
+<P><BR><BR>
+</P>
+<P><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&lt;?xml
+version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</SPAN></FONT></FONT></FONT>
+</P>
+<P><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="de-DE">&lt;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="de-DE">bundle</SPAN></FONT></FONT></FONT><FONT COLOR="#ff0000">
+</FONT><FONT COLOR="#ff0000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="de-DE">xmlns</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="de-DE">=&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#ff0000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="de-DE"><B>http://v8.1c.ru/8.2/addin/bundle</B></SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="de-DE">&quot;&gt;</SPAN></FONT></FONT></FONT></P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm"><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&lt;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">component</SPAN></FONT></FONT></FONT>
+	<FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">os</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>Windows</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">path</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>AddIn_FFWindows_x86.xpi</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">type</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>plugin</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">object</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>@vendor.ru/ClassService;1</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">arch</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>i386</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">client</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>Firefox</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">clientVersion</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>3.*</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;
+	/&gt;</SPAN></FONT></FONT></FONT> 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&lt;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">component</SPAN></FONT></FONT></FONT>
+	<FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">os</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>Linux</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">path</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>AddIn_FFLinux_x86.xpi</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">type</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>plugin</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">object</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>@vendor.ru/ClassService;1</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">arch</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>i386</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">client</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>Firefox</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">clientVersion</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>3.*</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;
+	/&gt;</SPAN></FONT></FONT></FONT> 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&lt;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">component</SPAN></FONT></FONT></FONT>
+	<FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">os</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>Linux</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">path</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>AddIn_FFLinux_x86_64.xpi</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">type</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>plugin</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">object</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>@vendor.ru/ClassService;1</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">arch</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>x86_64</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">client</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>Firefox</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">clientVersion</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>3.*</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;
+	/&gt;</SPAN></FONT></FONT></FONT> 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&lt;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">component</SPAN></FONT></FONT></FONT>
+	<FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">os</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>Windows</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">path</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>Addin_IEWindows_x86.cab</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">type</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>plugin</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">object</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>MyComponenIE.AddInServiceEx</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">arch</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>i386</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">client</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>MSIE</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;
+	/&gt;</SPAN></FONT></FONT></FONT> 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&lt;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">component</SPAN></FONT></FONT></FONT>
+	<FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">os</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>Windows</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">path</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>AddIn_IEWindows_x86_64.cab</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">type</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>plugin</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">object</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT>
+	<FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>MyComponenIE.AddInServiceEx</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">arch</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>x86_64</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">client</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>MSIE</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;
+	/&gt;</SPAN></FONT></FONT></FONT> 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&lt;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">component</SPAN></FONT></FONT></FONT>
+	<FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">os</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>Windows</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">path</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>AddInNative.dll</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">type</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>native</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">arch</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>i386</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;
+	/&gt;</SPAN></FONT></FONT></FONT> 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&lt;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">component</SPAN></FONT></FONT></FONT>
+	<FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">os</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>Windows</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">path</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>AddInNative64.dll</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">type</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>native</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">arch</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>x86_64</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;
+	/&gt;</SPAN></FONT></FONT></FONT> 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&lt;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">component</SPAN></FONT></FONT></FONT>
+	<FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">os</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>Linux</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">path</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>AddInNative.so</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">type</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>native</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">arch</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>i386</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;
+	/&gt;</SPAN></FONT></FONT></FONT> 
+	</DD><DD STYLE="margin-bottom: 0.5cm">
+	<FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&lt;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">component</SPAN></FONT></FONT></FONT>
+	<FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">os</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>Linux</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">path</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>AddInNative.so</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">type</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>native</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;</SPAN></FONT></FONT></FONT><FONT COLOR="#990000">
+	</FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">arch</SPAN></FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">=&quot;</SPAN></FONT></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>x86_64</B></SPAN></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US">&quot;
+	/&gt;</SPAN></FONT></FONT></FONT> 
+	</DD></DL>
+<P>
+<FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2>&lt;/</FONT></FONT></FONT><FONT COLOR="#990000"><FONT FACE="Verdana"><FONT SIZE=2>bundle</FONT></FONT></FONT><FONT COLOR="#0000ff"><FONT FACE="Verdana"><FONT SIZE=2>&gt;,</FONT></FONT></FONT></P>
+<P>Где:</P>
+<P><SPAN LANG="en-US">Os</SPAN> &ndash; операционная система
+(<SPAN LANG="en-US">Windows</SPAN>, <SPAN LANG="en-US">Linux</SPAN>),</P>
+<P><SPAN LANG="en-US">Path</SPAN> &ndash; название файла в архиве</P>
+<P><SPAN LANG="en-US">Type</SPAN> &ndash; тип компоненты (<SPAN LANG="en-US">plugin</SPAN>
+&ndash; расширение для браузера, native &ndash; <SPAN LANG="en-US">Native</SPAN>-компонента,
+com &ndash; <SPAN LANG="en-US">COM</SPAN>-компонента)</P>
+<P><SPAN LANG="en-US">Object</SPAN> &ndash; название объекта, который
+будет создаваться браузером</P>
+<P><SPAN LANG="en-US">Arch</SPAN> &ndash; для какой архитектуры
+процессора должна использоваться компонента (<SPAN LANG="en-US">i</SPAN>386
+&ndash; 32-х разрядный процессор, x86_64 &ndash; 64-х разрядный)</P>
+<P><SPAN LANG="en-US">Client</SPAN> &ndash; используется для
+Веб-клиента: указывает для какого браузера компонента (<SPAN LANG="en-US">MSIE</SPAN>
+&ndash; <SPAN LANG="en-US">Internet</SPAN> <SPAN LANG="en-US">Explorer</SPAN>,
+<SPAN LANG="en-US">Firefox</SPAN>)</P>
+<P>clientVersion &ndash; версия браузера.</P>
+<P>При изменении внешних компонент (новый релиз, исправление ошибок и
+т.д.) новую версию нужно добавлять к имени файла. Например:
+<FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>AddInNative</B></SPAN></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><B>_1_1.</B></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2><SPAN LANG="en-US"><B>so</B></SPAN></FONT></FONT><FONT FACE="Verdana"><FONT SIZE=2>.
+</FONT></FONT>Это правило не распространяется на расширения для
+браузеров. Для них должно быть изменено название object.</P>
+<H3 CLASS="western">&nbsp;Описание примеров.</H3>
+<P>В поставку настоящей методики входят примеры реализации внешних
+компонент, разработанных с использованием технологий Native API и
+СОМ, расширений для <SPAN LANG="en-US">Firefox</SPAN> и <SPAN LANG="en-US">Internet</SPAN>
+<SPAN LANG="en-US">Explorer</SPAN>.&nbsp;Кроме примера в поставку
+включен шаблон, позволяющие упростить создание компоненты &ldquo;с
+нуля&rdquo;. 
+</P>
+<P>Реализации компонент максимально приближены друг к другу
+(одинаковые идентификаторы, названия и т.д.), что упрощает процесс
+освоения и разбора различных реализаций.</P>
+<P>Компоненты реализует следующие свойства и методы:</P>
+<H5 CLASS="western">Свойства</H5>
+<P><B>Включен (IsEnabled)</B></P>
+<P>Использование: Чтение и запись.</P>
+<P>Описание: Тип: Булево. Содержит состояние компоненты.</P>
+<P><B>ЕстьТаймер (IsTimerPresent)</B></P>
+<P>Использование: Чтение.</P>
+<P>Описание: Тип: Булево. Определяет наличие у компоненты таймера.</P>
+<H5 CLASS="western">Методы</H5>
+<P><B>Включить (Enable)</B></P>
+<P>Синтаксис:</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Включить()</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Включает объект компоненты.</DD></DL>
+<P>
+<B>Выключить (Disable)</B></P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Выключить()</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Выключает объект компоненты.</DD></DL>
+<P>
+<B>ПоказатьВСтрокеСтатуса (ShowInStatusLine)</B></P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">ПоказатьВСтрокеСтатуса(&lt;Текст&gt;)</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Текст. Текст, выводимый в строке
+	статуса.</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">На 5 секунд выводит в строку
+	статуса полученный текст.</DD></DL>
+<P>
+<B>ВключитьТаймер (StartTimer)</B></P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">ВключитьТаймер()</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Включает таймер компоненты. Каждую
+	секунду компонента посылает сообщение 1С:Предприятию с параметрами
+	&ldquo;Component&rdquo;, &ldquo;Timer&rdquo; и строкой счетчика
+	системных часов.</DD></DL>
+<P>
+<B>ВыключитьТаймер (StopTimer)</B></P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">ВыключитьТаймер()</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Выключает таймер компоненты.</DD></DL>
+<P>
+Кроме того, компонента, разработанная с использованием Native <SPAN LANG="en-US">API</SPAN>,
+дополнительно реализует метод</P>
+<P><B>ЗагрузитьКартинку(LoadPicture)</B></P>
+<P>Синтаксис: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">ЗагрузитьКартинку (&lt;ИмяФайла&gt;)</DD></DL>
+<P>
+Параметры: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">ИмяФайла. Имя файла с изображением.</DD></DL>
+<P>
+Описание: 
+</P>
+<DL>
+	<DD STYLE="margin-bottom: 0.5cm">Загружает изображение из указанного
+	файла и передает его в 1С:Предприятие в виде двоичных данных.</DD></DL>
+</BODY>
+</HTML>

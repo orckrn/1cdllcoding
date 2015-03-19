@@ -1,0 +1,17 @@
+HKCU
+{
+    NoRemove SOFTWARE
+    {
+        NoRemove Classes
+        {
+            NoRemove AppID
+            {
+                '%APPID%' = s 'AddIn'
+                'AddIn.DLL'
+                {
+                    val AppID = s '%APPID%'
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,10 @@
+; AddInIE.def : Declares the module parameters.
+
+LIBRARY      "AddInIE.DLL"
+
+EXPORTS
+	DllCanUnloadNow		PRIVATE
+	DllGetClassObject	PRIVATE
+	DllRegisterServer	PRIVATE
+	DllUnregisterServer	PRIVATE
+	DllInstall		PRIVATE

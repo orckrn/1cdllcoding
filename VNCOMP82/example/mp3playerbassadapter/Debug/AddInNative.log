@@ -1,0 +1,23 @@
+﻿Построение начато 10.06.2014 12:57:44.
+     1>Проект "C:\1cprojectpetrov\VNCOMP82\example\mp3playerbassadapter\AddInNative.vcxproj" в узле 2 (целевые объекты Build).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I..\..\include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D ADDINCPP_EXPORTS /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_WARNINGS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt AddInNative.cpp
+         AddInNative.cpp
+     1>c:\1cprojectpetrov\vncomp82\example\mp3playerbassadapter\addinnative.cpp(250): warning C4065: оператор switch содержит метку "default", но не содержит ни одной метки "case"
+     1>c:\1cprojectpetrov\vncomp82\example\mp3playerbassadapter\addinnative.cpp(265): warning C4065: оператор switch содержит метку "default", но не содержит ни одной метки "case"
+     1>c:\1cprojectpetrov\vncomp82\example\mp3playerbassadapter\addinnative.cpp(332): warning C4065: оператор switch содержит метку "default", но не содержит ни одной метки "case"
+     1>c:\1cprojectpetrov\vncomp82\example\mp3playerbassadapter\addinnative.cpp(353): warning C4065: оператор switch содержит метку "default", но не содержит ни одной метки "case"
+     1>c:\1cprojectpetrov\vncomp82\example\mp3playerbassadapter\addinnative.cpp(366): warning C4065: оператор switch содержит метку "default", но не содержит ни одной метки "case"
+     1>c:\1cprojectpetrov\vncomp82\example\mp3playerbassadapter\addinnative.cpp(427): warning C4065: оператор switch содержит метку "default", но не содержит ни одной метки "case"
+     1>c:\1cprojectpetrov\vncomp82\example\mp3playerbassadapter\addinnative.cpp(465): warning C4065: оператор switch содержит метку "default", но не содержит ни одной метки "case"
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\1cprojectpetrov\VNCOMP82\example\mp3playerbassadapter\Debug\AddInNative.dll" /INCREMENTAL /NOLOGO bass.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /DEF:"AddInNative.def" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\1cprojectpetrov\VNCOMP82\example\mp3playerbassadapter\Debug\AddInNative.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\1cprojectpetrov\VNCOMP82\example\mp3playerbassadapter\Debug\AddInNative.lib" /MACHINE:X86 /SAFESEH  /SAFESEH:NO /DLL Debug\AddInNative.obj
+         Debug\dllmain.obj
+         Debug\stdafx.obj
+            ╤ючфрхЄё  сшсышюЄхър C:\1cprojectpetrov\VNCOMP82\example\mp3playerbassadapter\Debug\AddInNative.lib ш юс·хъЄ C:\1cprojectpetrov\VNCOMP82\example\mp3playerbassadapter\Debug\AddInNative.exp
+         AddInNative.vcxproj -> C:\1cprojectpetrov\VNCOMP82\example\mp3playerbassadapter\Debug\AddInNative.dll
+     1>Построение проекта "C:\1cprojectpetrov\VNCOMP82\example\mp3playerbassadapter\AddInNative.vcxproj" завершено (целевые объекты Build).
+
+Построение успешно завершено.
+
+Затраченное время: 00:00:12.79

@@ -1,0 +1,108 @@
+
+[Version] 
+Signature="$Chicago$" 
+AdvancedINF=2.5
+LayoutFile=%PROG_INF%
+
+[DefaultInstall]
+;
+; This rule is invoked when installing.
+;   First copy the file sets listed, then register the control
+;
+CopyFiles=MyFiles, inffile
+RegisterOCXs=RegisterOCXSection
+AddReg=PROG.AddReg
+
+[DefaultUninstall]
+; cleanup=1 will cause the inf to be removed
+BeginPrompt	=BeginUnInsPrompt
+cleanup=1
+Delfiles=MyFiles
+UnRegisterOCXs=UnRegisterOCXSection
+DelReg=PROG.DelReg
+RunPostSetupCommand=Del.Folders
+
+[RegisterOCXSection]
+; change MyCompany\MyComponent\AddInIE.dll
+%16410%\%PROG_PATH%\AddInIE.dll
+
+[UnRegisterOCXSection]
+; change MyCompany\MyComponent\AddInIE.dll
+%16410%\%PROG_PATH%\AddInIE.dll
+
+[BeginUnInsPrompt] 
+Title				=%PROG_TITLE% %PROG_NAME%
+Prompt				=%BEGIN_PROMT% %PROG_NAME% %END_PROMT% 
+ButtonType			=YESNO
+
+[SourceDisksNames]
+; change "My component name","AddIn_IEWindows_x86.cab"
+1="My component name","AddIn_IEWindows_x86.cab",0
+
+[SourceDisksFiles]
+; =1 means it's in this directory
+;; change file names
+./AddInIE.dll=1
+./AddInNative.dll=1
+; ./messagebox.exe=1
+
+[ControlFiles]
+
+[MyFiles]
+;; change file names
+AddInIE.dll,,,33
+AddInNative.dll,,,33
+; messagebox.exe,,,33
+
+[inffile]
+addin.inf,,,33
+
+[DestinationDirs]
+; 16410 = user folder, so this is %APPDATA%
+MyFiles=16410, %PROG_PATH%
+
+; The inf is saved so you can un-install.
+inffile=16410, %PROG_PATH%
+
+[PROG.AddReg]
+HKCU,"%SWUninstall%\%PROG_NAME%","DisplayName",,%PROG_NAME%"
+HKCU,"%SWUninstall%\%PROG_NAME%","DisplayVersion",,"%PROG_VERS%"
+HKCU,"%SWUninstall%\%PROG_NAME%","Publisher",,"%PROG_MADE%"
+HKCU,"%SWUninstall%\%PROG_NAME%","URLInfoAbout",,"%PROG_URL%"
+HKCU,"%SWUninstall%\%PROG_NAME%","UninstallString",,"rundll32.exe advpack.dll,LaunchINFSection %16410%\%PROG_PATH%\%PROG_INF%,DefaultUninstall"
+
+[PROG.DelReg]
+HKCU,"%SWUninstall%\%PROG_NAME%"
+
+[Del.Folders]
+%16410%, %PROG_PATH%
+
+[Del.PNF]
+%PROG_PNF%
+
+[Strings.0419] 
+PROG_NAME			="Компонента для Internet Explorer"
+PROG_PATH           ="MyCompany\MyComponent"
+PROG_VERS			="1.0.0"
+PROG_MADE			="MyCompany"
+PROG_URL			="http://MyURL.ru"
+PROG_INF			="addin.inf"
+PROG_PNF			="addin.PNF"
+PROG_INFO			="Компонента для Internet Explorer"
+PROG_TITLE          ="Деинсталляция"
+BEGIN_PROMT         ="Вы действительно хотите удалить"
+END_PROMT           ="и все компоненты программы?"
+SWUninstall			="SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
+[Strings] 
+PROG_NAME			="Component for Internet Explorer"
+PROG_PATH           ="MyCompany\MyComponent"
+PROG_VERS			="1.0.0"
+PROG_MADE			="MyCompany"
+PROG_URL			="http://MyURL.ru"
+PROG_INF			="addin.inf"
+PROG_PNF			="addin.PNF"
+PROG_INFO			="Component for Internet Explorer"
+PROG_TITLE          ="Uninstall"
+BEGIN_PROMT         ="Are you sure you want to delete"
+END_PROMT           ="and all components of the program?"
+SWUninstall			="SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"

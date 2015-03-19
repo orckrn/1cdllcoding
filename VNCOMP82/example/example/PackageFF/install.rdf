@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+		xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+
+	<Description about="urn:mozilla:install-manifest">
+	<!-- my package uuid-->
+	<em:id>{7BE1BBD9-E6AC-4a73-82D6-D3997DE7AE2F}</em:id>
+    <!-- my package version-->
+	<em:version>1.0.0.0</em:version>
+	
+	
+	<!-- FireFox    DO NOT ALTER THIS -->
+	<em:targetApplication>
+		<Description>
+		<em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
+		<em:minVersion>3.0.0</em:minVersion>
+		<em:maxVersion>3.0.*</em:maxVersion>
+		</Description>
+	</em:targetApplication>
+	
+	<em:targetPlatform>WINNT_x86-msvc</em:targetPlatform>
+	
+	<em:type>2</em:type>	
+	<!-- Front End MetaData -->
+    
+    <!--  my component info-->
+	<em:name>My External Component</em:name>
+	<em:description>My External Component</em:description>
+	<em:creator>MyVendor</em:creator>
+	<em:homepageURL>http://www.MySite.ru/</em:homepageURL>
+
+	</Description>  
+</RDF>
